@@ -1,0 +1,74 @@
+{
+	"name": "Survey UI Tweaks",
+
+	"namespace":"Stanford\\SurveyUITweaks",
+
+	"description": "Various survey ui tweaks - such as hiding survey queue button in top right and the queue at the end of the survey.",
+
+	"versions": [
+		{ "0.1": "Initial Development Version" }
+	],
+
+	"authors": [
+		{
+			"name": "Andy Martin",
+			"email": "andy123@stanford.edu",
+			"institution": "Stanford University"
+		},
+		{
+			"name": "YongJae Lee",
+			"email": "jael@stanford.edu",
+			"institution": "Stanford University"
+		}
+	],
+
+	"permissions": [
+		"hook_survey_page_top",
+		"hook_survey_complete"
+	],
+
+	"links": {
+		"control-center": [
+		],
+		"project": [
+		]
+	},
+
+	"system-settings": [
+	],
+	
+	"project-settings": [
+		{
+			"key": "hide_queue_corner",
+			"name": "Hide the queue button in upper right corner",
+			"required": false,
+			"type": "checkbox"
+		},
+		{
+			"key": "hide_queue_end",
+			"name": "Hide the queue list at the end of the survey",
+			"required": false,
+			"type": "checkbox"
+		},
+		{
+			"key": "remove_excess_td",
+			"name": "Remove the extra td for question number if number is off",
+			"required": false,
+			"type": "checkbox"
+		},
+		{
+			"key": "rename_submit_button",
+			"name": "Rename submit button. <br>Enter the new label for the submit button <br>(For ex: Next Page >>)",
+			"required": false,
+			"type": "text"
+		},
+		{
+			"key": "hide_submit_button",
+			"name": "Hide submit button",
+			"required": false,
+			"type": "checkbox"
+		}
+
+
+	]
+}
