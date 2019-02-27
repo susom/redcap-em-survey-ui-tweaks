@@ -23,8 +23,8 @@
 	],
 
 	"permissions": [
-		"hook_survey_page_top",
-		"hook_survey_complete"
+		"redcap_survey_page_top",
+		"redcap_survey_complete"
 	],
 
 	"links": {
@@ -35,40 +35,65 @@
 	},
 
 	"system-settings": [
+		{
+		  "key": "enable-system-debug-logging",
+		  "name": "<b>Enable Debug Logging (system-wide)</b> <i>(Requires emLogger)</i>",
+		  "required": false,
+		  "type": "checkbox"
+		}
 	],
 	
 	"project-settings": [
 		{
-			"key": "hide_queue_corner",
-			"name": "Hide the queue button in upper right corner",
+			"key": "survey_tweaks",
+			"name": "Survey Customizations",
 			"required": false,
-			"type": "checkbox"
+			"type": "sub_settings",
+			"repeatable": true,
+			"sub_settings": [
+				{
+					"key": "survey_name",
+					"name": "<b>Survey Name</b><br>Select which survey you want to apply the following tweaks to:",
+					"required": false,
+					"type": "form-list"
+				},
+				{
+					"key": "hide_queue_corner",
+					"name": "Hide the queue button in upper right corner",
+					"required": false,
+					"type": "checkbox"
+				},
+				{
+					"key": "hide_queue_end",
+					"name": "Hide the queue list at the end of the survey",
+					"required": false,
+					"type": "checkbox"
+				},
+				{
+					"key": "remove_excess_td",
+					"name": "Remove the extra space on the left of questions (survey must be set to 'Custom numbered')",
+					"required": false,
+					"type": "checkbox"
+				},
+				{
+					"key": "rename_submit_button",
+					"name": "Rename submit button. <br>Enter the new label for the submit button, e.g. <u>Next Page >></u>",
+					"required": false,
+					"type": "text"
+				},
+				{
+					"key": "hide_submit_button",
+					"name": "Hide submit button<br>This will prevent survey submission - useful for informational surveys",
+					"required": false,
+					"type": "checkbox"
+				}
+			]
 		},
 		{
-			"key": "hide_queue_end",
-			"name": "Hide the queue list at the end of the survey",
-			"required": false,
-			"type": "checkbox"
-		},
-		{
-			"key": "remove_excess_td",
-			"name": "Remove the extra td for question number if number is off",
-			"required": false,
-			"type": "checkbox"
-		},
-		{
-			"key": "rename_submit_button",
-			"name": "Rename submit button. <br>Enter the new label for the submit button <br>(For ex: Next Page >>)",
-			"required": false,
-			"type": "text"
-		},
-		{
-			"key": "hide_submit_button",
-			"name": "Hide submit button",
-			"required": false,
-			"type": "checkbox"
+		  "key": "enable-project-debug-logging",
+		  "name": "<b>Enable Debug Logging</b> <i>(Requires emLogger)</i>",
+		  "required": false,
+		  "type": "checkbox"
 		}
-
-
 	]
 }
