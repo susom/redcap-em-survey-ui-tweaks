@@ -6,8 +6,12 @@
 	"description": "Various survey ui tweaks - such as hiding survey queue button in top right and the queue at the end of the survey.",
 
 	"versions": [
-		{ "0.1": "Initial Development Version" }
+		{
+			"0.1": "Initial Development Version",
+		  	"0.2": "Added global function"
+		}
 	],
+
 
 	"authors": [
 		{
@@ -44,6 +48,12 @@
 	],
 	
 	"project-settings": [
+		{
+			"key": "global_remove_excess_td",
+			"name": "Remove the extra space on the left of questions <b> For all Surveys </b> (survey must be set to 'Custom numbered')",
+			"required": false,
+			"type": "checkbox"
+		},
 		{
 			"key": "survey_tweaks",
 			"name": "Survey Customizations",

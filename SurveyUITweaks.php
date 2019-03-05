@@ -9,6 +9,8 @@ class SurveyUITweaks extends \ExternalModules\AbstractExternalModule
 
     public $settings;
 
+    public $global_remove_excess_td;
+
     function __construct()
     {
         parent::__construct();
@@ -17,11 +19,33 @@ class SurveyUITweaks extends \ExternalModules\AbstractExternalModule
 
             // In project context
             $this->settings = $this->getSubSettings('survey_tweaks');
+
+            $this->global_remove_excess_td = $this->getProjectSetting('global_remove_excess_td');
+
+            $this->emDebug($this->global_remove_excess_td);
         }
     }
 
     function redcap_survey_page_top($project_id, $record, $instrument, $event_id, $group_id, $survey_hash, $response_id, $repeat_instance)
     {
+
+
+        // Remove excess td
+        if ($this->global_remove_excess_td) {
+            $this->emDebug("Here");
+            $this->removeExcessTd();
+        } else {
+            foreach ($this->settings as $settings) {
+                if ($settings['survey_name'] == $instrument && $settings['remove_excess_td']) {
+                    $this->removeExcessTd();
+                }
+            }
+        }
+
+
+
+
+
         $this->emDebug("SURVEY PAGE TOP - $instrument");
         foreach ($this->settings as $settings) {
             if ($settings['survey_name'] == $instrument) {
@@ -55,7 +79,7 @@ class SurveyUITweaks extends \ExternalModules\AbstractExternalModule
         if ($function == 'redcap_survey_page_top')
         {
             //hide the survey_queue button on upper right corner
-            if ($hide_queue_corner) {
+            if ($hide_queue_corner || $this->global_remove_excess_td) {
                 ?>
                 <style>
                     #return_corner, #survey_queue_corner {
@@ -65,19 +89,19 @@ class SurveyUITweaks extends \ExternalModules\AbstractExternalModule
                 <?php
             }
 
-            //remove the excess TD on left if $question_auto_numbering on
-            if ($remove_excess_td) {
-                global $question_auto_numbering;
-                if ($question_auto_numbering == 0) {
-                    ?>
-                    <style>
-                        td.questionnum, td.questionnummatrix {
-                            display: none !important;
-                        }
-                    </style>
-                    <?php
-                }
-            }
+//            //remove the excess TD on left if $question_auto_numbering on
+//            if ($remove_excess_td) {
+//                global $question_auto_numbering;
+//                if ($question_auto_numbering == 0) {
+//                    ?>
+<!--                    <style>-->
+<!--                        td.questionnum, td.questionnummatrix {-->
+<!--                            display: none !important;-->
+<!--                        }-->
+<!--                    </style>-->
+<!--                    --><?php
+//                }
+//            }
 
             if ($hide_submit_button) {
                 ?>
@@ -124,6 +148,22 @@ class SurveyUITweaks extends \ExternalModules\AbstractExternalModule
                 </style>
                 <?php
             }
+        }
+    }
+
+
+    function removeExcessTd()
+    {
+        //remove the excess TD on left if $question_auto_numbering on
+        global $question_auto_numbering;
+        if ($question_auto_numbering == 0) {
+            ?>
+            <style>
+                td.questionnum, td.questionnummatrix {
+                    display: none !important;
+                }
+            </style>
+            <?php
         }
     }
 
