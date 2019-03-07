@@ -9,8 +9,6 @@ class SurveyUITweaks extends \ExternalModules\AbstractExternalModule
 
     public $settings;
 
-    public $global_remove_excess_td;
-
     function __construct()
     {
         parent::__construct();
@@ -19,31 +17,22 @@ class SurveyUITweaks extends \ExternalModules\AbstractExternalModule
 
             // In project context
             $this->settings = $this->getSubSettings('survey_tweaks');
-
-            $this->global_remove_excess_td = $this->getProjectSetting('global_remove_excess_td');
-
-            $this->emDebug($this->global_remove_excess_td);
         }
     }
 
     function redcap_survey_page_top($project_id, $record, $instrument, $event_id, $group_id, $survey_hash, $response_id, $repeat_instance)
     {
+        //Remove excess td
+        $this->checkFeature('remove_excess_td', 'removeExcessTd', $instrument);
 
+        //Auto scrolling
+        $this->checkFeature('autoscroll', 'autoscroll', $instrument);
 
-        // Remove excess td
-        if ($this->global_remove_excess_td) {
-            $this->emDebug("Here");
-            $this->removeExcessTd();
-        } else {
-            foreach ($this->settings as $settings) {
-                if ($settings['survey_name'] == $instrument && $settings['remove_excess_td']) {
-                    $this->removeExcessTd();
-                }
-            }
-        }
+        //Hide survey queue button
+        $this->checkFeature('hide_queue_corner', 'hideQueueCorner', $instrument);
 
-
-
+        //Hide font resize button
+        $this->checkFeature('hide_font_resize', 'hideFontResize', $instrument);
 
 
         $this->emDebug("SURVEY PAGE TOP - $instrument");
@@ -55,7 +44,6 @@ class SurveyUITweaks extends \ExternalModules\AbstractExternalModule
         }
 
     }
-
 
     function redcap_survey_complete($project_id, $record, $instrument, $event_id, $group_id, $survey_hash, $response_id, $repeat_instance)
     {
@@ -75,34 +63,10 @@ class SurveyUITweaks extends \ExternalModules\AbstractExternalModule
         $hide_submit_button   = @$settings['hide_submit_button'];
         $rename_submit_button = @$settings['rename_submit_button'];
         $hide_end_queue       = @$settings['hide_end_queue'];
+        $hide_reset_button    = @$settings['hide_reset_button'];
 
         if ($function == 'redcap_survey_page_top')
         {
-            //hide the survey_queue button on upper right corner
-            if ($hide_queue_corner || $this->global_remove_excess_td) {
-                ?>
-                <style>
-                    #return_corner, #survey_queue_corner {
-                        display: none !important;
-                    }
-                </style>
-                <?php
-            }
-
-//            //remove the excess TD on left if $question_auto_numbering on
-//            if ($remove_excess_td) {
-//                global $question_auto_numbering;
-//                if ($question_auto_numbering == 0) {
-//                    ?>
-<!--                    <style>-->
-<!--                        td.questionnum, td.questionnummatrix {-->
-<!--                            display: none !important;-->
-<!--                        }-->
-<!--                    </style>-->
-<!--                    --><?php
-//                }
-//            }
-
             if ($hide_submit_button) {
                 ?>
                 <script type="text/javascript">
@@ -129,6 +93,17 @@ class SurveyUITweaks extends \ExternalModules\AbstractExternalModule
                         //change all the submit buttons to next page buttons
                         $("button:contains('Submit')").text(newval);
                         $("tr.surveysubmit").css({"opacity":1});
+                    });
+                </script>
+                <?php
+
+            }
+
+            if ($hide_reset_button) {
+                ?>
+                <script type="text/javascript">
+                    $(document).ready(function () {
+                        $(".smalllink").remove();
                     });
                 </script>
                 <?php
@@ -164,6 +139,56 @@ class SurveyUITweaks extends \ExternalModules\AbstractExternalModule
                 }
             </style>
             <?php
+        }
+    }
+
+    function hideQueueCorner()
+    {
+        ?>
+        <style>
+            #return_corner, #survey_queue_corner {
+            display: none !important;
+                    }
+        </style>
+        <?php
+    }
+
+    function hideFontResize()
+    {
+        ?>
+        <style>
+            #changeFont {
+                display: none;
+            }
+        </style>
+        <?php
+    }
+
+    function autoscroll()
+    {
+        ?>
+        <style>
+            #autoscroll         { background-color: #666; display:inline-block; color: #fff !important; }
+            #autoscroll.enabled { background-color: #8C1515; }
+        </style>
+        <?php
+        echo "<script>" . file_get_contents($this->getModulePath() . "/js/autoscroll.js") . "</script>";
+    }
+
+    function checkFeature($keyName, $funcName, $instrument, $args = array())
+    {
+        $global_setting = $this->getProjectSetting("global_" . $keyName);
+
+        if ($global_setting) {
+            $this->emDebug("enabling global $funcName");
+            call_user_func_array(array($this, $funcName), $args);
+        } else {
+            foreach ($this->settings as $settings) {
+                if ($settings['survey_name'] == $instrument && $settings[$keyName]) {
+                    $this->emDebug("enabling  $funcName on $instrument");
+                    call_user_func_array(array($this, $funcName), $args);
+                }
+            }
         }
     }
 

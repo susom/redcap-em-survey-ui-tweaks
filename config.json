@@ -8,7 +8,7 @@
 	"versions": [
 		{
 			"0.1": "Initial Development Version",
-		  	"0.2": "Added global function"
+			"0.2": "Added global function"
 		}
 	],
 
@@ -40,20 +40,39 @@
 
 	"system-settings": [
 		{
-		  "key": "enable-system-debug-logging",
-		  "name": "<b>Enable Debug Logging (system-wide)</b> <i>(Requires emLogger)</i>",
-		  "required": false,
-		  "type": "checkbox"
+			"key": "enable-system-debug-logging",
+			"name": "<b>Enable Debug Logging (system-wide)</b> <i>(Requires emLogger)</i>",
+			"required": false,
+			"type": "checkbox"
 		}
 	],
-	
+
 	"project-settings": [
 		{
 			"key": "global_remove_excess_td",
-			"name": "Remove the extra space on the left of questions <b> For all Surveys </b> (survey must be set to 'Custom numbered')",
+			"name": "Remove the extra space on the left of questions <b> for all Surveys </b> (survey must be set to 'Custom numbered')",
 			"required": false,
 			"type": "checkbox"
 		},
+		{
+			"key": "global_autoscroll",
+			"name": "Enable autoscroll <b> for all Surveys </b>",
+			"required": false,
+			"type": "checkbox"
+		},
+		{
+			"key": "global_hide_queue_corner",
+			"name": "Hide the queue button in the upper right corner <strong> for all surveys</strong>",
+			"required": false,
+			"type": "checkbox"
+		},
+		{
+			"key": "global_hide_font_resize",
+			"name": "Hide the font resize option <strong> for all surveys</strong>",
+			"required": false,
+			"type": "checkbox"
+		},
+
 		{
 			"key": "survey_tweaks",
 			"name": "Survey Customizations",
@@ -80,10 +99,36 @@
 					"type": "checkbox"
 				},
 				{
+					"key": "autoscroll",
+					"name": "Enable autoscroll for this survey",
+					"required": false,
+					"type": "checkbox",
+						"branchingLogic":
+						{
+							"conditions":
+							[
+								{
+									"field": "global_autoscroll",
+									"value": false
+								}
+							]
+						}
+				},
+				{
 					"key": "remove_excess_td",
 					"name": "Remove the extra space on the left of questions (survey must be set to 'Custom numbered')",
 					"required": false,
-					"type": "checkbox"
+					"type": "checkbox",
+						"branchingLogic":
+						{
+							"conditions":
+							[
+								{
+									"field": "global_remove_excess_td",
+									"value": false
+								}
+							]
+						}
 				},
 				{
 					"key": "rename_submit_button",
@@ -96,14 +141,21 @@
 					"name": "Hide submit button<br>This will prevent survey submission - useful for informational surveys",
 					"required": false,
 					"type": "checkbox"
+				},
+				{
+					"key": "hide_reset_button",
+					"name": "Hide reset button for radio buttons, yes no, and true / false fields",
+					"required": false,
+					"type": "checkbox"
 				}
 			]
 		},
 		{
-		  "key": "enable-project-debug-logging",
-		  "name": "<b>Enable Debug Logging</b> <i>(Requires emLogger)</i>",
-		  "required": false,
-		  "type": "checkbox"
+			"key": "enable-project-debug-logging",
+			"name": "<b>Enable Debug Logging</b> <i>(Requires emLogger)</i>",
+			"required": false,
+			"type": "checkbox"
 		}
+
 	]
 }
