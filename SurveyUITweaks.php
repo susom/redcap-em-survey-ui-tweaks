@@ -14,118 +14,47 @@ class SurveyUITweaks extends \ExternalModules\AbstractExternalModule
         parent::__construct();
 
         if ($this->getProjectId()) {
-
-            // In project context
+            // Load the project settings
             $this->settings = $this->getSubSettings('survey_tweaks');
         }
     }
 
+
+    ## THESE ARE TWEAKS FOR SURVEY_PAGE_TOP
     function redcap_survey_page_top($project_id, $record, $instrument, $event_id, $group_id, $survey_hash, $response_id, $repeat_instance)
     {
-        //Remove excess td
+        // Remove excess td
         $this->checkFeature('remove_excess_td', 'removeExcessTd', $instrument);
 
-        //Auto scrolling
+        // Auto scrolling
         $this->checkFeature('autoscroll', 'autoscroll', $instrument);
 
-        //Hide survey queue button
+        // Hide survey queue button
         $this->checkFeature('hide_queue_corner', 'hideQueueCorner', $instrument);
 
-        //Hide font resize button
+        // Hide font resize button
         $this->checkFeature('hide_font_resize', 'hideFontResize', $instrument);
 
+        // Hide submit button
+        $this->checkFeature('hide_submit_button', 'hideSubmitButton', $instrument);
 
-        $this->emDebug("SURVEY PAGE TOP - $instrument");
-        foreach ($this->settings as $settings) {
-            if ($settings['survey_name'] == $instrument) {
-                $this->emDebug("Running tweaks on $instrument for " . __FUNCTION__);
-                $this->runTweaks(__FUNCTION__, $settings);
-            }
-        }
+        // Rename submit button
+        $this->checkFeature('rename_submit_button', 'renameSubmitButton', $instrument);
+
+        // hide reset button
+        $this->checkFeature('hide_reset_button', 'hideResetButton', $instrument);
 
     }
 
+    ## THESE ARE TWEAKS FOR SURVEY_COMPLETE
     function redcap_survey_complete($project_id, $record, $instrument, $event_id, $group_id, $survey_hash, $response_id, $repeat_instance)
     {
-        foreach ($this->settings as $settings) {
-            if ($settings['survey_name'] == $instrument) {
-                $this->emDebug("Running tweaks on $instrument for " . __FUNCTION__);
-                $this->runTweaks(__FUNCTION__, $settings);
-            }
-        }
+        // hide queue summary at end of survey page
+        $this->checkFeature('hide_end_queue', 'hideEndQueue', $instrument);
     }
 
-    function runTweaks($function, $settings) {
 
-        // Convert the keys of settings into variables
-        $hide_queue_corner    = @$settings['hide_queue_corner'];
-        $remove_excess_td     = @$settings['remove_excess_td'];
-        $hide_submit_button   = @$settings['hide_submit_button'];
-        $rename_submit_button = @$settings['rename_submit_button'];
-        $hide_end_queue       = @$settings['hide_end_queue'];
-        $hide_reset_button    = @$settings['hide_reset_button'];
-
-        if ($function == 'redcap_survey_page_top')
-        {
-            if ($hide_submit_button) {
-                ?>
-                <script type="text/javascript">
-                    $(document).ready(function () {
-                        $("[name=submit-btn-saverecord]").hide();
-                        // //change all the submit buttons to next page buttons
-                        // $("button:contains('Submit')").text("Next Page >>");
-                    });
-                </script>
-                <?php
-            }
-
-            if ($rename_submit_button) {
-                // Hide the TR so you don't see the text get swapped out
-                ?>
-                <style>
-                    tr.surveysubmit {
-                        opacity: 0;
-                    }
-                </style>
-                <script type="text/javascript">
-                    $(document).ready(function () {
-                        var newval = "<?php echo $rename_submit_button ?>";
-                        //change all the submit buttons to next page buttons
-                        $("button:contains('Submit')").text(newval);
-                        $("tr.surveysubmit").css({"opacity":1});
-                    });
-                </script>
-                <?php
-
-            }
-
-            if ($hide_reset_button) {
-                ?>
-                <script type="text/javascript">
-                    $(document).ready(function () {
-                        $(".smalllink").remove();
-                    });
-                </script>
-                <?php
-
-            }
-
-        }
-
-        if ($function == 'redcap_survey_complete')
-        {
-            if ($hide_end_queue) {
-                ?>
-                <style>
-                    #survey_queue {
-                        display: none !important;
-                    }
-                </style>
-                <?php
-            }
-        }
-    }
-
+    ## ACTUAL UTILITY FUNCTIONS - ADD MORE TO YOUR HEARTS CONTENT!
 
     function removeExcessTd()
     {
@@ -142,6 +71,26 @@ class SurveyUITweaks extends \ExternalModules\AbstractExternalModule
         }
     }
 
+
+    function hideSubmitButton()
+    {
+        // TODO: Change to CSS fix instead of JS
+        ?>
+            <style>
+                tr.surveysubmit {
+                    opacity: 0;
+                }
+            </style>
+            <script type="text/javascript">
+                $(document).ready(function () {
+                    $("[name=submit-btn-saverecord]").hide();
+                    $("tr.surveysubmit").css({"opacity":1});
+                });
+            </script>
+        <?php
+    }
+
+
     function hideQueueCorner()
     {
         ?>
@@ -152,6 +101,7 @@ class SurveyUITweaks extends \ExternalModules\AbstractExternalModule
         </style>
         <?php
     }
+
 
     function hideFontResize()
     {
@@ -164,6 +114,7 @@ class SurveyUITweaks extends \ExternalModules\AbstractExternalModule
         <?php
     }
 
+
     function autoscroll()
     {
         ?>
@@ -175,18 +126,76 @@ class SurveyUITweaks extends \ExternalModules\AbstractExternalModule
         echo "<script>" . file_get_contents($this->getModulePath() . "/js/autoscroll.js") . "</script>";
     }
 
+
+    function renameSubmitButton($name)
+    {
+        ?>
+        <style>
+            tr.surveysubmit {
+                opacity: 0;
+            }
+        </style>
+        <script type="text/javascript">
+            $(document).ready(function () {
+                var newval = "<?php echo $name ?>";
+                $("button:contains('Submit')").text(newval);
+                $("tr.surveysubmit").css({"opacity": 1});
+            });
+        </script>
+        <?php
+    }
+
+
+    // Hide the survey queue summary at the end of survey page
+    function hideEndQueue()
+    {
+        ?>
+            <style>
+                #survey_queue {
+                    display: none !important;
+                }
+            </style>
+        <?php
+    }
+
+    // Hide the reset links for radio questions
+    function hideResetButton()
+    {
+        ?>
+        <style>
+            .smalllink { display:none !important; }
+        </style>
+        <script type="text/javascript">
+            // $(document).ready(function () {
+            //     $(".smalllink").remove();
+            // });
+        </script>
+        <?php
+    }
+
+
+
+
+    /**
+     * A helper that assumes the keyNames for global or survey-specific are the same
+     * @param       $keyName        // This is the name of the key for the survey-specific setting (should be checkbox)
+     * @param       $funcName       // This is the function to call if true
+     * @param       $instrument     // This is the current instrument
+     * @param array $args           // This is an optional array of parameters to pass to the function
+     *                              // otherwise the return value from the keyName setting is passed to the function
+     */
     function checkFeature($keyName, $funcName, $instrument, $args = array())
     {
         $global_setting = $this->getProjectSetting("global_" . $keyName);
 
         if ($global_setting) {
             $this->emDebug("enabling global $funcName");
-            call_user_func_array(array($this, $funcName), $args);
+            call_user_func_array(array($this, $funcName), empty($args) ? $global_setting : $args);
         } else {
             foreach ($this->settings as $settings) {
                 if ($settings['survey_name'] == $instrument && $settings[$keyName]) {
                     $this->emDebug("enabling  $funcName on $instrument");
-                    call_user_func_array(array($this, $funcName), $args);
+                    call_user_func_array(array($this, $funcName), empty($args) ? $settings[$keyName] : $args);
                 }
             }
         }
