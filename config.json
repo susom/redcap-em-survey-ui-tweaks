@@ -54,6 +54,11 @@
 
 	"project-settings": [
 		{
+			"key": "global_instructions",
+			"name": "<div class='alert alert-success text-center'><strong>The following options apply GLOBALLY to all surveys in this project.</strong>",
+			"type": "descriptive"
+		},
+		{
 			"key": "global_remove_excess_td",
 			"name": "Remove the extra space on the left of questions <b> for all Surveys </b> (survey must be set to 'Custom numbered')",
 			"required": false,
@@ -72,43 +77,59 @@
 			"type": "checkbox"
 		},
 		{
+			"key": "global_hide_queue_end",
+			"name": "Hide the queue list at the end of the survey <strong> for all surveys </strong>",
+			"required": false,
+			"type": "checkbox"
+		},
+		{
 			"key": "global_hide_font_resize",
 			"name": "Hide the font resize option <strong> for all surveys</strong>",
+			"required": false,
+			"type": "checkbox"
+		},
+		{
+			"key": "global_hide_reset_button",
+			"name": "Hide reset button for radio buttons, yes no, and true / false fields <strong> for all surveys </strong>",
 			"required": false,
 			"type": "checkbox"
 		},
 
 		{
 			"key": "survey_tweaks",
-			"name": "Survey Customizations",
+			"name": "Per-Survey Customizations",
 			"required": false,
 			"type": "sub_settings",
 			"repeatable": true,
 			"sub_settings": [
 				{
 					"key": "survey_name",
-					"name": "<b>Survey Name</b><br>Select which survey you want to apply the following tweaks to:",
+					"name": "<b>Survey Name</b><br>Select which survey you want to selectively apply the following tweaks to:",
 					"required": false,
 					"type": "form-list"
 				},
 				{
-					"key": "hide_queue_corner",
-					"name": "Hide the queue button in upper right corner",
+					"key": "remove_excess_td",
+					"name": "Remove the extra space on the left of questions (survey must be set to 'Custom numbered')",
 					"required": false,
-					"type": "checkbox"
-				},
-				{
-					"key": "hide_queue_end",
-					"name": "Hide the queue list at the end of the survey",
-					"required": false,
-					"type": "checkbox"
+					"type": "checkbox",
+					"branchingLogic":
+						{
+							"conditions":
+							[
+								{
+									"field": "global_remove_excess_td",
+									"value": false
+								}
+							]
+						}
 				},
 				{
 					"key": "autoscroll",
 					"name": "Enable autoscroll for this survey",
 					"required": false,
 					"type": "checkbox",
-						"branchingLogic":
+					"branchingLogic":
 						{
 							"conditions":
 							[
@@ -120,16 +141,32 @@
 						}
 				},
 				{
-					"key": "remove_excess_td",
-					"name": "Remove the extra space on the left of questions (survey must be set to 'Custom numbered')",
+					"key": "hide_queue_corner",
+					"name": "Hide the queue button in upper right corner",
 					"required": false,
 					"type": "checkbox",
-						"branchingLogic":
+					"branchingLogic":
 						{
 							"conditions":
 							[
 								{
-									"field": "global_remove_excess_td",
+									"field": "global_hide_queue_corner",
+									"value": false
+								}
+							]
+						}
+				},
+				{
+					"key": "hide_queue_end",
+					"name": "Hide the queue list at the end of the survey",
+					"required": false,
+					"type": "checkbox",
+					"branchingLogic":
+						{
+							"conditions":
+							[
+								{
+									"field": "global_hide_queue_end",
 									"value": false
 								}
 							]
@@ -151,7 +188,18 @@
 					"key": "hide_reset_button",
 					"name": "Hide reset button for radio buttons, yes no, and true / false fields",
 					"required": false,
-					"type": "checkbox"
+					"type": "checkbox",
+					"branchingLogic":
+						{
+							"conditions":
+							[
+								{
+									"field": "global_hide_reset_button",
+									"value": false
+								}
+							]
+						}
+
 				}
 			]
 		},
