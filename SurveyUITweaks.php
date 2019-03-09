@@ -3,16 +3,41 @@ namespace Stanford\SurveyUITweaks;
 
 include_once ("emLoggerTrait.php");
 
+
+/**
+ *
+ * A bunch of little CSS and JS tweaks that help enhance survey functionality
+ * TODO: Make configuration available from the actual Survey Settings page
+ *
+ * Class SurveyUITweaks
+ * @package Stanford\SurveyUITweaks
+ */
 class SurveyUITweaks extends \ExternalModules\AbstractExternalModule
 {
     use emLoggerTrait;
 
-    public $settings;
+    public $settings;   // Per survey subsettings
+
+    // For simple tweaks: Key name and function
+    const SURVEY_PAGE_TOP_TWEAKS = array(
+        'remove_excess_td'     => 'removeExcessTd',
+        'autoscroll'           => 'autoscroll',
+        'hide_queue_corner'    => 'hideQueueCorner',
+        'hide_font_resize'     => 'hideFontResize',
+        'hide_submit_button'   => 'hideSubmitButton',
+        'rename_submit_button' => 'renameSubmitButton',
+        'hide_reset_button'    => 'hideResetButton'
+    );
+
+        // For simple tweaks: Key name and function
+    const SURVEY_COMPLETE_TWEAKS = array(
+        'hide_end_queue'       => 'hideEndQueue'
+    );
+
 
     function __construct()
     {
         parent::__construct();
-
         if ($this->getProjectId()) {
             // Load the project settings
             $this->settings = $this->getSubSettings('survey_tweaks');
@@ -23,39 +48,22 @@ class SurveyUITweaks extends \ExternalModules\AbstractExternalModule
     ## THESE ARE TWEAKS FOR SURVEY_PAGE_TOP
     function redcap_survey_page_top($project_id, $record, $instrument, $event_id, $group_id, $survey_hash, $response_id, $repeat_instance)
     {
-        // Remove excess td
-        $this->checkFeature('remove_excess_td', 'removeExcessTd', $instrument);
-
-        // Auto scrolling
-        $this->checkFeature('autoscroll', 'autoscroll', $instrument);
-
-        // Hide survey queue button
-        $this->checkFeature('hide_queue_corner', 'hideQueueCorner', $instrument);
-
-        // Hide font resize button
-        $this->checkFeature('hide_font_resize', 'hideFontResize', $instrument);
-
-        // Hide submit button
-        $this->checkFeature('hide_submit_button', 'hideSubmitButton', $instrument);
-
-        // Rename submit button
-        $this->checkFeature('rename_submit_button', 'renameSubmitButton', $instrument);
-
-        // hide reset button
-        $this->checkFeature('hide_reset_button', 'hideResetButton', $instrument);
-
+        foreach($this::SURVEY_PAGE_TOP_TWEAKS as $key=>$func) {
+            $this->checkFeature($key, $func, $instrument);
+        }
     }
+
 
     ## THESE ARE TWEAKS FOR SURVEY_COMPLETE
     function redcap_survey_complete($project_id, $record, $instrument, $event_id, $group_id, $survey_hash, $response_id, $repeat_instance)
     {
-        // hide queue summary at end of survey page
-        $this->checkFeature('hide_end_queue', 'hideEndQueue', $instrument);
+        foreach($this::SURVEY_COMPLETE_TWEAKS as $key=>$func) {
+            $this->checkFeature($key, $func, $instrument);
+        }
     }
 
 
-    ## ACTUAL UTILITY FUNCTIONS - ADD MORE TO YOUR HEARTS CONTENT!
-
+    ## ACTUAL TWEAK FUNCTIONS - ADD MORE TO YOUR HEART'S CONTENT!
     function removeExcessTd()
     {
         //remove the excess TD on left if $question_auto_numbering on
@@ -197,6 +205,14 @@ class SurveyUITweaks extends \ExternalModules\AbstractExternalModule
                     $this->emDebug("enabling  $funcName on $instrument");
                     call_user_func_array(array($this, $funcName), empty($args) ? $settings[$keyName] : $args);
                 }
+            }
+        }
+    }
+
+    // TODO: Build function to determine which are enabled
+    function getEnabledTweaks() {
+        foreach($this::SURVEY_PAGE_TOP_TWEAKS as $key=>$func) {
+            if ($this->getProjectSetting('global_' . $key)) {
             }
         }
     }
