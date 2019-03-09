@@ -115,7 +115,7 @@ class SurveyUITweaks extends \ExternalModules\AbstractExternalModule
     {
         ?>
         <style>
-            #changeFont {
+            #changeFont .nowrap {
                 display: none;
             }
         </style>
