@@ -74,6 +74,11 @@ class SurveyUITweaks extends \ExternalModules\AbstractExternalModule
                 td.questionnum, td.questionnummatrix {
                     display: none !important;
                 }
+
+                /* When we clean up the left space, we can extend enhanced choice options
+                to be full width for a better appearance */
+                div.enhancedchoice label { width: 100% }
+
             </style>
             <?php
         }
