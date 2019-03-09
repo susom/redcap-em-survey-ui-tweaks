@@ -198,12 +198,12 @@ class SurveyUITweaks extends \ExternalModules\AbstractExternalModule
 
         if ($global_setting) {
             $this->emDebug("enabling global $funcName");
-            call_user_func_array(array($this, $funcName), empty($args) ? $global_setting : $args);
+            call_user_func_array(array($this, $funcName), empty($args) ? array($global_setting) : $args);
         } else {
             foreach ($this->settings as $settings) {
                 if ($settings['survey_name'] == $instrument && $settings[$keyName]) {
                     $this->emDebug("enabling  $funcName on $instrument");
-                    call_user_func_array(array($this, $funcName), empty($args) ? $settings[$keyName] : $args);
+                    call_user_func_array(array($this, $funcName), empty($args) ? array($settings[$keyName]) : $args);
                 }
             }
         }

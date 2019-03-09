@@ -94,7 +94,11 @@
 			"required": false,
 			"type": "checkbox"
 		},
-
+		{
+			"key": "survey_instructions",
+			"name": "<div class='alert alert-success text-center'><strong>The following options apply only to the selected survey:</strong>",
+			"type": "descriptive"
+		},
 		{
 			"key": "survey_tweaks",
 			"name": "Per-Survey Customizations",
