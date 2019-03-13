@@ -8,7 +8,9 @@
 	"versions": [
 		{
 			"0.1": "Initial Development Version",
-			"0.2": "Added global function"
+			"0.2": "Added global function",
+			"1.0.0": "initial repo release",
+			"1.0.1": "changed class so as not to have array constants"
 		}
 	],
 

@@ -18,23 +18,6 @@ class SurveyUITweaks extends \ExternalModules\AbstractExternalModule
 
     public $settings;   // Per survey subsettings
 
-    // For simple tweaks: Key name and function
-    const SURVEY_PAGE_TOP_TWEAKS = array(
-        'remove_excess_td'     => 'removeExcessTd',
-        'autoscroll'           => 'autoscroll',
-        'hide_queue_corner'    => 'hideQueueCorner',
-        'hide_font_resize'     => 'hideFontResize',
-        'hide_submit_button'   => 'hideSubmitButton',
-        'rename_submit_button' => 'renameSubmitButton',
-        'hide_reset_button'    => 'hideResetButton'
-    );
-
-        // For simple tweaks: Key name and function
-    const SURVEY_COMPLETE_TWEAKS = array(
-        'hide_end_queue'       => 'hideEndQueue'
-    );
-
-
     function __construct()
     {
         parent::__construct();
@@ -48,7 +31,18 @@ class SurveyUITweaks extends \ExternalModules\AbstractExternalModule
     ## THESE ARE TWEAKS FOR SURVEY_PAGE_TOP
     function redcap_survey_page_top($project_id, $record, $instrument, $event_id, $group_id, $survey_hash, $response_id, $repeat_instance)
     {
-        foreach($this::SURVEY_PAGE_TOP_TWEAKS as $key=>$func) {
+
+        $survey_page_top_tweaks = array(
+            'remove_excess_td'     => 'removeExcessTd',
+            'autoscroll'           => 'autoscroll',
+            'hide_queue_corner'    => 'hideQueueCorner',
+            'hide_font_resize'     => 'hideFontResize',
+            'hide_submit_button'   => 'hideSubmitButton',
+            'rename_submit_button' => 'renameSubmitButton',
+            'hide_reset_button'    => 'hideResetButton'
+        );
+
+        foreach($survey_page_top_tweaks as $key=>$func) {
             $this->checkFeature($key, $func, $instrument);
         }
     }
@@ -57,7 +51,12 @@ class SurveyUITweaks extends \ExternalModules\AbstractExternalModule
     ## THESE ARE TWEAKS FOR SURVEY_COMPLETE
     function redcap_survey_complete($project_id, $record, $instrument, $event_id, $group_id, $survey_hash, $response_id, $repeat_instance)
     {
-        foreach($this::SURVEY_COMPLETE_TWEAKS as $key=>$func) {
+
+        $survey_complete_tweaks = array(
+            'hide_end_queue'       => 'hideEndQueue'
+        );
+
+        foreach($survey_complete_tweaks as $key=>$func) {
             $this->checkFeature($key, $func, $instrument);
         }
     }
