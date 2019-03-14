@@ -3,6 +3,7 @@ namespace Stanford\SurveyUITweaks;
 
 include_once ("emLoggerTrait.php");
 
+use \REDCap;
 
 /**
  *
@@ -45,6 +46,10 @@ class SurveyUITweaks extends \ExternalModules\AbstractExternalModule
         foreach($survey_page_top_tweaks as $key=>$func) {
             $this->checkFeature($key, $func, $instrument);
         }
+
+        $this->checkSurveyDuration($instrument);
+
+
     }
 
 
@@ -63,6 +68,34 @@ class SurveyUITweaks extends \ExternalModules\AbstractExternalModule
 
 
     ## ACTUAL TWEAK FUNCTIONS - ADD MORE TO YOUR HEART'S CONTENT!
+    function checkSurveyDuration($instrument) {
+        // Array of arrays of duration_field => field_name
+        $duration_fields = array();
+        $duration_field_settings = $this->getSubSettings('survey_duration_fields');
+        foreach ($duration_field_settings as $setting) {
+            $duration_fields[] = $setting['duration_field'];
+        }
+
+        // Dont do anything if we don't have any duration fields specified
+        if (empty($duration_fields)) return false;
+
+        // Filter duration fields by instrument
+        $instrument_fields = REDCap::getFieldNames($instrument);
+        $fields = array_intersect($duration_fields, $instrument_fields);
+
+        // None of the fields are on the current form
+        if (empty($fields)) return false;
+
+        ?>
+            <script>
+                var SurveyDuration = SurveyDuration || {};
+                SurveyDuration.fields = <?php echo json_encode($fields) ?>;
+                <?php echo file_get_contents($this->getModulePath() . "js/SurveyDuration.js"); ?>
+            </script>
+        <?php
+    }
+
+
     function removeExcessTd()
     {
         //remove the excess TD on left if $question_auto_numbering on

@@ -210,6 +210,21 @@
 			]
 		},
 		{
+			"key": "survey_duration_fields",
+			"name": "You can record the number of seconds a user spends on a survey page",
+			"required": false,
+			"type": "sub_settings",
+			"repeatable": true,
+			"sub_settings": [
+				{
+					"key": "duration_field",
+					"name": "<b>Duration Field</b><br>Select one or more fields - if present on the page/section, the duration of page view in seconds will be stored.  If there is an existing value the new duration will be added.  Field should be plain text, not time.  Field will be automatically 'hidden' when viewed in surveys.",
+					"required": false,
+					"type": "field-list"
+				}
+			]
+		},
+		{
 			"key": "enable-project-debug-logging",
 			"name": "<b>Enable Debug Logging</b> <i>(Requires emLogger)</i>",
 			"required": false,
