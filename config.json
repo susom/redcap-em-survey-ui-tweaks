@@ -57,7 +57,7 @@
 	"project-settings": [
 		{
 			"key": "global_instructions",
-			"name": "<div class='alert alert-success text-center'><strong>The following options apply GLOBALLY to all surveys in this project.</strong>",
+			"name": "<h5 class='text-center'><span class='text-lg badge badge-lg badge-success'>Global Tweaks</span></h5>The following set of tweaks will apply to all surveys in the project.  If configured here, the option will not appear in the per-survey section.",
 			"type": "descriptive"
 		},
 		{
@@ -98,7 +98,7 @@
 		},
 		{
 			"key": "survey_instructions",
-			"name": "<div class='alert alert-success text-center'><strong>The following options apply only to the selected survey:</strong>",
+			"name": "<h5 class='text-center'><span class='text-lg badge badge-lg badge-success'>Survey-specific Tweaks</span></h5>This section allows you to specify a tweak only on a particular survey.  Start by selecting the survey and then indicate which tweaks you wish to apply.",
 			"type": "descriptive"
 		},
 		{
@@ -210,15 +210,20 @@
 			]
 		},
 		{
+			"key": "survey_duration_desc",
+			"name": "<h5 class='text-center'><span class='text-lg badge badge-lg badge-success'>Measure Survey Duration In Seconds</span></h5>You can record the number of seconds a user spends on a survey page (or survey section).  You must add a text field to each page/section that you want to record.  The field will be automatically hidden on surveys.  If a survey user returns to a page, the duration will be added to the previous value.",
+			"type": "descriptive"
+		},
+		{
 			"key": "survey_duration_fields",
-			"name": "You can record the number of seconds a user spends on a survey page",
+			"name": "<b>Survey Duration Fields</b>",
 			"required": false,
 			"type": "sub_settings",
 			"repeatable": true,
 			"sub_settings": [
 				{
 					"key": "duration_field",
-					"name": "<b>Duration Field</b><br>Select one or more fields - if present on the page/section, the duration of page view in seconds will be stored.  If there is an existing value the new duration will be added.  Field should be plain text, not time.  Field will be automatically 'hidden' when viewed in surveys.",
+					"name": "<b>Select Survey Field</b> (should be text)",
 					"required": false,
 					"type": "field-list"
 				}
