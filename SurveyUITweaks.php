@@ -56,9 +56,10 @@ class SurveyUITweaks extends \ExternalModules\AbstractExternalModule
     ## THESE ARE TWEAKS FOR SURVEY_COMPLETE
     function redcap_survey_complete($project_id, $record, $instrument, $event_id, $group_id, $survey_hash, $response_id, $repeat_instance)
     {
+        $this->emDebug($instrument . "here");
 
         $survey_complete_tweaks = array(
-            'hide_end_queue'       => 'hideEndQueue'
+            'hide_queue_end'       => 'hideQueueEnd'
         );
 
         foreach($survey_complete_tweaks as $key=>$func) {
@@ -192,7 +193,7 @@ class SurveyUITweaks extends \ExternalModules\AbstractExternalModule
 
 
     // Hide the survey queue summary at the end of survey page
-    function hideEndQueue()
+    function hideQueueEnd()
     {
         ?>
             <style>
@@ -231,19 +232,25 @@ class SurveyUITweaks extends \ExternalModules\AbstractExternalModule
      */
     function checkFeature($keyName, $funcName, $instrument, $args = array())
     {
-        $global_setting = $this->getProjectSetting("global_" . $keyName);
+        $globalKey = 'global_' . $keyName;
+        $projectSettings = $this->getProjectSettings();
+        $keyFound = array_key_exists($globalKey, $projectSettings);
+
+        $global_setting = $this->getProjectSetting($globalKey);
 
         if ($global_setting) {
             $this->emDebug("enabling global $funcName");
             call_user_func_array(array($this, $funcName), empty($args) ? array($global_setting) : $args);
         } else {
             foreach ($this->settings as $settings) {
+                if (array_key_exists($keyName, $settings)) $keyFound=true;
                 if ($settings['survey_name'] == $instrument && $settings[$keyName]) {
                     $this->emDebug("enabling  $funcName on $instrument");
                     call_user_func_array(array($this, $funcName), empty($args) ? array($settings[$keyName]) : $args);
                 }
             }
         }
+        if (!$keyFound) $this->emError("Unable to find key $keyName in settings");
     }
 
     // TODO: Build function to determine which are enabled
