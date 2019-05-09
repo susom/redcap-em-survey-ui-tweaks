@@ -209,6 +209,35 @@
 				}
 			]
 		},
+
+		{
+			"key": "sortrank",
+			"name": "Enhanced Drag and Drop Matrix Ranking",
+			"required": false,
+			"type": "sub_settings",
+			"repeatable": true,
+			"sub_settings": [
+				{
+					"key": "matrix_name",
+					"name": "<b>Matrix Group Name</b><br>Select which matrix you want to selectively apply the following tweaks to",
+					"required": false,
+					"type": "text"
+				},
+				{
+					"key": "show_rank_label",
+					"name": "<b>Show Rank Order labels</b> in the drag list item",
+					"required": false,
+					"type": "checkbox"
+				},
+				{
+					"key": "matrix_instructions",
+					"name": "<b>Matrix Instructions</b> to show as text in draggable area",
+					"required": false,
+					"type": "notesbox"
+				}
+			]
+		},
+
 		{
 			"key": "survey_duration_desc",
 			"name": "<h5 class='text-center'><span class='text-lg badge badge-lg badge-success'>Measure Survey Duration In Seconds</span></h5>You can record the number of seconds a user spends on a survey page (or survey section).  You must add a text field to each page/section that you want to record.  The field will be automatically hidden on surveys.  If a survey user returns to a page, the duration will be added to the previous value.",

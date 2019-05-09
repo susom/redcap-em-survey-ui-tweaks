@@ -48,7 +48,7 @@ class SurveyUITweaks extends \ExternalModules\AbstractExternalModule
         }
 
         $this->checkSurveyDuration($instrument);
-
+        $this->checkMatrixRank($instrument);
 
     }
 
@@ -96,6 +96,153 @@ class SurveyUITweaks extends \ExternalModules\AbstractExternalModule
         <?php
     }
 
+    ## ACTUAL TWEAK FUNCTIONS - ADD MORE TO YOUR HEART'S CONTENT!
+    function checkMatrixRank($instrument) {
+        // Array of arrays of matrix_groups => field_name
+        $matrix_groups  = array();
+        $matrix_options = array();
+        $field_settings = $this->getSubSettings('sortrank');
+
+        foreach ($field_settings as $setting) {
+            $matrix_groups[]                            = $setting['matrix_name'];
+            $matrix_options[$setting['matrix_name']]    = array(
+                 'show_rank_label'      => $setting['show_rank_label']
+                ,'matrix_instructions'  => $setting['matrix_instructions']
+            );
+        }
+
+        // Dont do anything if we don't have any matrix_groups specified
+        if (empty($matrix_groups)) return false;
+
+        // Get Instrument Data Dictionary
+        $instrument_dict_json =  REDCap::getDataDictionary($this->getProjectId(), "json", False, Null, array($instrument));
+        $instrument_dict =  json_decode($instrument_dict_json,true);
+
+        // IF Survey in Progress Will need to Get State... Scrape from existing?
+        // Or Download here and redo... seems wasteful to do a duplicate
+
+        $error_arr  = array();
+        $matrix_arr = array();
+        foreach($instrument_dict as $field){
+            $mtx_grp = $field["matrix_group_name"];
+
+            if(!empty($mtx_grp) && in_array($mtx_grp, $matrix_groups)){
+                //Iterate through data dict. And look for Desired Matrix Ranks
+                if(!array_key_exists($mtx_grp, $error_arr)) $error_arr[$mtx_grp] = array();
+
+                //Verify field type = radio
+                //Verify matrix_ranking = y
+                if(empty($error_arr[$mtx_grp])) {
+                    if ($field["field_type"] !== "radio") {
+                        $error_arr[$mtx_grp][] = "field_type must be 'radio'";
+                    }
+                    if ($field["matrix_ranking"] !== "y") {
+                        $error_arr[$mtx_grp][] = "matrix_ranking must be 'y'";
+                    }
+                }
+
+                if(empty($error_arr[$mtx_grp])){
+                    if(!array_key_exists($mtx_grp, $matrix_arr)) $matrix_arr[$mtx_grp] = array();
+                    $matrix_arr[$mtx_grp][] = $field;
+                }
+            }
+        }
+        //LOG ANY ERRORS
+        if(!empty($error_arr)){
+            foreach($error_arr as $err_mtx_grp => $errs){
+                if(!empty($errs)){
+                    REDCap::logEvent("[". $this->PREFIX . "] Invalid Rank Matrix Config", "$err_mtx_grp : " . implode(", ", $errs));
+                }
+            }
+        }
+
+        // None of the matrix_groups are on the current form
+        if (empty($matrix_arr)) return false;
+
+        $rank_matrices = array();
+        foreach($matrix_arr as $mtx_grp => $fields){
+            $rank_matrices[$mtx_grp] = array();
+
+            $field_names    = array();
+            $field_labels   = array();
+            foreach($fields as $field){
+                $field_names[]  = $field["field_name"];
+                $field_labels[] = $field["field_label"];
+            }
+
+            $choice_split = explode(" | ", $fields[0]["select_choices_or_calculations"]);
+            $choice_arr = array();
+            foreach($choice_split as $split){
+                list($k,$v) = explode(",",$split, 2);
+                $choice_arr[trim($k)] = trim($v);
+            }
+
+            $rank_matrices[$mtx_grp]["choices"] = $choice_arr;
+            $rank_matrices[$mtx_grp]["header"]  = $fields[0]["section_header"];
+            $rank_matrices[$mtx_grp]["names"]   = $field_names;
+            $rank_matrices[$mtx_grp]["labels"]  = $field_labels;
+            $rank_matrices[$mtx_grp]["options"] = $matrix_options[$mtx_grp];
+        }
+
+
+        $this->emDebug($rank_matrices);
+
+        ?>
+        <style>
+            .sort_rank_container {
+                padding:2vh;
+                overflow:hidden;
+            }
+            .draggable{
+                display:inline-block;
+                float:left;
+                border:1px solid #efefef;
+                border-radius:5px;
+                padding:.25%;
+                width:48%;
+            }
+            .draggable:last-child{
+                margin-left:2%;
+            }
+            .draggable ul{
+                margin:0;
+                padding:0;
+                list-style:none;
+                position:relative;
+                z-index:1;
+            }
+            .draggable li{
+                display: block;
+                border: 1px solid #ccc;
+                margin: 1vh;
+                padding: 2vh;
+                border-radius: 5px;
+                cursor: pointer;
+                min-height: 2vh;
+                background:#fff;
+            }
+            .draggable li:hover{
+                background:#efefef;
+            }
+            .draggable p.alert{
+                border:1px dashed #ccc !important;
+                margin:20px;
+                position:absolute;
+                z-index:0;
+            }
+        </style>
+        <script>
+            var MatrixRanking       = MatrixRanking || {};
+            MatrixRanking.config    = <?php echo json_encode($rank_matrices) ?>;
+            <?php
+                //THE ORDER OF THE FOLLOWING 3 JS files MUST BE LIKE SO.
+                echo file_get_contents($this->getModulePath() . "js/Sortable.min.js");
+                echo file_get_contents($this->getModulePath() . "js/jquery-sortable.js");
+                echo file_get_contents($this->getModulePath() . "js/MatrixRanking.js");
+            ?>
+        </script>
+        <?php
+    }
 
     function removeExcessTd()
     {
