@@ -185,7 +185,7 @@ class SurveyUITweaks extends \ExternalModules\AbstractExternalModule
         }
 
 
-        $this->emDebug($rank_matrices);
+//        $this->emDebug($rank_matrices);
 
         ?>
         <style>
