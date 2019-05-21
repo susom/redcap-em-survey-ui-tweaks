@@ -27,6 +27,7 @@ MatrixRanking = Object.assign( MatrixRanking, {
 
 	constructNewUI : function(mtx_grp, mtx_grp_config){
 		var use_rank_label 			= mtx_grp_config["options"]["show_rank_label"];
+		var randomize_options 		= mtx_grp_config["options"]["randomize_options"];
 		var show_mtx_instructions 	= mtx_grp_config["options"]["matrix_instructions"];
 
 		//CREATE SOME UNIQUE VARS TO USE FOR THE NEW UI
@@ -57,6 +58,7 @@ MatrixRanking = Object.assign( MatrixRanking, {
 							  }, saved_values);
 
 		var stored_nam_lab 	= {};
+		var randomize_opts 	= [];
 		for (var i in mtx_grp_config["names"]){
 			if(un_checked.indexOf(mtx_grp_config["names"][i]) < 0){
 				stored_nam_lab[mtx_grp_config["names"][i]] = mtx_grp_config["labels"][i];
@@ -67,7 +69,16 @@ MatrixRanking = Object.assign( MatrixRanking, {
 			var mtx_pfx 		= input_prefix + mtx_grp_config["names"][i] + "_";
 			var label 			= $("<li>").text(mtx_grp_config["labels"][i]).attr("data-checkgrp",mtx_pfx);
 
-			sort_rank_list_1.append(label);
+			if(randomize_options){
+				randomize_opts.push(label);
+			}else{
+				sort_rank_list_1.append(label);
+			}
+		}
+		if(randomize_opts.length){
+			for(var i = randomize_opts.length-1;i>=0;i--){
+				sort_rank_list_1.append(randomize_opts.splice(Math.floor(Math.random()*randomize_opts.length), 1));
+			}
 		}
 
 		//IF RESUMING SAVED SURVEY DO THIS

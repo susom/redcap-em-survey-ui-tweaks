@@ -235,6 +235,12 @@
 					"type": "checkbox"
 				},
 				{
+					"key": "randomize_options",
+					"name": "<b>Randomize Order of Choices</b> to decrease bias",
+					"required": false,
+					"type": "checkbox"
+				},
+				{
 					"key": "matrix_instructions",
 					"name": "<b>Matrix Instructions</b> to show as text in draggable area",
 					"required": false,

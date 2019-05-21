@@ -108,6 +108,7 @@ class SurveyUITweaks extends \ExternalModules\AbstractExternalModule
             $matrix_options[$setting['matrix_name']]    = array(
                  'show_rank_label'      => $setting['show_rank_label']
                 ,'matrix_instructions'  => $setting['matrix_instructions']
+                ,'randomize_options'    => $setting['randomize_options']
             );
         }
 
