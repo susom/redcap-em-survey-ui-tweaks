@@ -277,7 +277,7 @@ class SurveyUITweaks extends \ExternalModules\AbstractExternalModule
             </style>
             <script type="text/javascript">
                 $(document).ready(function () {
-                    $("[name=submit-btn-saverecord]").hide();
+                    $("button:contains('Submit')").hide();
                     $("tr.surveysubmit").css({"opacity":1});
                 });
             </script>
