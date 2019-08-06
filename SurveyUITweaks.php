@@ -327,13 +327,24 @@ class SurveyUITweaks extends \ExternalModules\AbstractExternalModule
         <style>
             tr.surveysubmit {
                 opacity: 0;
+
             }
         </style>
         <script type="text/javascript">
             $(document).ready(function () {
                 var newval = "<?php echo $name ?>";
+                //var width = $(newval).width();
                 $("button:contains('Submit')").text(newval);
                 $("tr.surveysubmit").css({"opacity": 1});
+                //$("button:contains(newval)").css({"min-width": width, "max-width": width + 50});
+                //$('[name = "submit-btn-saverecord"]').attr('style', 'max-width: 100% !important; color: #800000; width: 100%;'); //bad fix
+
+
+                // need to figure out how to dynamically change the size and add rules for keeping the "Next Page" buttons the original size
+                if($("button:contains(newval)")){
+                    //$('#surveytitle').text("Here");
+                    $('[name = "submit-btn-saverecord"]').attr('style', 'max-width: 100% !important; color: #800000; width: 100%;');
+                }
             });
         </script>
         <?php
