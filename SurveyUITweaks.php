@@ -343,7 +343,7 @@ class SurveyUITweaks extends \ExternalModules\AbstractExternalModule
                 // need to figure out how to dynamically change the size and add rules for keeping the "Next Page" buttons the original size
                 if($("button:contains(newval)")){
                     //$('#surveytitle').text("Here");
-                    $('[name = "submit-btn-saverecord"]').attr('style', 'min-width: 140px; color: #800000; width: 100%; padding-left: 10px !important; padding-right: 10px !important; white-space: initial !important'); // still doesn't work on single long strings
+                    $('[name = "submit-btn-saverecord"]').attr('style', 'min-width: 140px; color: #800000; width: 100%; padding-left: 10px !important; padding-right: 10px !important; white-space: initial !important; overflow-wrap: break-word !important'); // still doesn't work on single long strings
                 }
             });
         </script>
