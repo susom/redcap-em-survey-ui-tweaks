@@ -41,7 +41,8 @@ class SurveyUITweaks extends \ExternalModules\AbstractExternalModule
             'hide_submit_button'   => 'hideSubmitButton',
             'rename_submit_button' => 'renameSubmitButton',
             'hide_reset_button'    => 'hideResetButton',
-            'rename_next_button'   => 'renameNextButton'
+            'rename_next_button'   => 'renameNextButton',
+            'hide_required_text'   => 'hideRequiredText'
         );
 
         foreach($survey_page_top_tweaks as $key=>$func) {
@@ -367,7 +368,6 @@ class SurveyUITweaks extends \ExternalModules\AbstractExternalModule
         <?php
     }
 
-
     // Hide the survey queue summary at the end of survey page
     function hideQueueEnd()
     {
@@ -391,6 +391,17 @@ class SurveyUITweaks extends \ExternalModules\AbstractExternalModule
             // $(document).ready(function () {
             //     $(".smalllink").remove();
             // });
+        </script>
+        <?php
+    }
+
+    function hideRequiredText()
+    {
+        ?>
+        <script>
+            $(document).ready(function() {
+                $(".requiredlabel").text("*");
+            });
         </script>
         <?php
     }
