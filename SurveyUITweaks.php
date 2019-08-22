@@ -40,7 +40,8 @@ class SurveyUITweaks extends \ExternalModules\AbstractExternalModule
             'hide_font_resize'     => 'hideFontResize',
             'hide_submit_button'   => 'hideSubmitButton',
             'rename_submit_button' => 'renameSubmitButton',
-            'hide_reset_button'    => 'hideResetButton'
+            'hide_reset_button'    => 'hideResetButton',
+            'rename_next_button'   => 'renameNextButton'
         );
 
         foreach($survey_page_top_tweaks as $key=>$func) {
@@ -337,6 +338,28 @@ class SurveyUITweaks extends \ExternalModules\AbstractExternalModule
                 $("tr.surveysubmit").css({"opacity": 1});
 
                 if($("button:contains(newval)")){
+                    $('[name = "submit-btn-saverecord"]').attr('style', 'min-width: 140px; color: #800000; width: 100%; padding-left: 10px !important; padding-right: 10px !important; white-space: initial !important; overflow-wrap: break-word !important');
+                }
+            });
+        </script>
+        <?php
+    }
+
+    function renameNextButton($name)
+    {
+        ?>
+        <style>
+            tr.surveysubmit{
+                opacity: 0;
+            }
+        </style>
+        <script type = "text/javascript">
+            $(document).ready(function () {
+                var newval = "<?php echo $name ?>";
+                $("button:contains('Next Page >>')").text(newval);
+                $("tr.surveysubmit").css({"opacity": 1});
+
+                if($("button:contains(newval)")) {
                     $('[name = "submit-btn-saverecord"]').attr('style', 'min-width: 140px; color: #800000; width: 100%; padding-left: 10px !important; padding-right: 10px !important; white-space: initial !important; overflow-wrap: break-word !important');
                 }
             });
