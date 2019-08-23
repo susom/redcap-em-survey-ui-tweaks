@@ -20,7 +20,7 @@ This module provides end users with the ability to apply certain survey tweaks e
 
 1. **Hide Reset Button:** In some cases you want to hide the 'reset link' for radio questions.
 
-1. **Rename "Next Page" Button:** You may want to change the "Next Page >>" language when breaking up a survey by sections.
+1. **Rename "Next Page >>" and "<< Previous Page" Buttons:** You may want to change the language on these buttons when breaking up a survey by sections.
 
 1. **Hide required field text:** De-clutter your page on surveys with many required fields.
 
