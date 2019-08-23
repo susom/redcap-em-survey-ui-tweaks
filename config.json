@@ -103,7 +103,13 @@
 		},
 		{
 			"key": "global_rename_next_button",
-			"name": "Rename the \"Next Page >>\" text when continuing through multiple surveys",
+			"name": "Rename the \"Next Page >>\" text when continuing through multiple pages in a survey",
+			"required": false,
+			"type": "text"
+		},
+		{
+			"key": "global_rename_previous_button",
+			"name": "Rename the \"<< Previous Page\" text when continuing through multiple pages in a survey",
 			"required": false,
 			"type": "text"
 		},
