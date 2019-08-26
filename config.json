@@ -102,6 +102,24 @@
 			"type": "checkbox"
 		},
 		{
+			"key": "global_rename_next_button",
+			"name": "Rename the \"Next Page >>\" text when continuing through multiple pages in a survey",
+			"required": false,
+			"type": "text"
+		},
+		{
+			"key": "global_rename_previous_button",
+			"name": "Rename the \"<< Previous Page\" text when continuing through multiple pages in a survey",
+			"required": false,
+			"type": "text"
+		},
+		{
+			"key": "global_hide_required_text",
+			"name": "Replace <font color = \"red\"><i> * must provide value </i></font> text with <font color = \"red\"><i> *</i></font> ",
+			"required": false,
+			"type": "checkbox"
+		},
+		{
 			"key": "survey_instructions",
 			"name": "<h5 class='text-center'><span class='text-lg badge badge-lg badge-success'>Survey-specific Tweaks</span></h5>This section allows you to specify a tweak only on a particular survey.  Start by selecting the survey and then indicate which tweaks you wish to apply.",
 			"type": "descriptive"
