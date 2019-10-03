@@ -121,7 +121,7 @@
 		},
 		{
 			"key": "global_resize_survey",
-			"name": "Change the percent of the screen your survey takes up",
+			"name": "Change the percent of the screen your survey takes up (e.g. 95)",
 			"required": false,
 			"type": "text"
 		},
