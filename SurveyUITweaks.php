@@ -430,6 +430,22 @@ class SurveyUITweaks extends \ExternalModules\AbstractExternalModule
         <?php
     }
 
+    function resizeSurvey($size)
+    {
+        ?>
+        <script type = "text/javascript">
+            $(document).ready(function(){
+                var newval = "<?php echo $size ?>";
+
+                if(newval) {
+                    $("#container").attr('style', 'max-width:' + newval +'% !important');
+                }
+            });
+        </script>
+
+        <?php
+    }
+
 
 
 
