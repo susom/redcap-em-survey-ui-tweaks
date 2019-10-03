@@ -43,7 +43,8 @@ class SurveyUITweaks extends \ExternalModules\AbstractExternalModule
             'hide_reset_button'      => 'hideResetButton',
             'rename_next_button'     => 'renameNextButton',
             'rename_previous_button' => 'renamePreviousButton',
-            'hide_required_text'     => 'hideRequiredText'
+            'hide_required_text'     => 'hideRequiredText',
+            'resize_survey'          => 'resizeSurvey'
         );
 
         foreach($survey_page_top_tweaks as $key=>$func) {

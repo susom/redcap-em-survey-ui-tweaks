@@ -120,6 +120,12 @@
 			"type": "checkbox"
 		},
 		{
+			"key": "global_resize_survey",
+			"name": "Change the percent of the screen your survey takes up",
+			"required": false,
+			"type": "text"
+		},
+		{
 			"key": "survey_instructions",
 			"name": "<h5 class='text-center'><span class='text-lg badge badge-lg badge-success'>Survey-specific Tweaks</span></h5>This section allows you to specify a tweak only on a particular survey.  Start by selecting the survey and then indicate which tweaks you wish to apply.",
 			"type": "descriptive"
