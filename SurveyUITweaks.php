@@ -430,12 +430,13 @@ class SurveyUITweaks extends \ExternalModules\AbstractExternalModule
         <?php
     }
 
-    function resizeSurvey($size) // this works but for big survey pages the "font resize" button is still misaligned
+    function resizeSurvey($size)
     {
         ?>
         <script type = "text/javascript">
             $(document).ready(function(){
                 $("#pagecontainer").attr('style', 'max-width: <?php echo $size?>% !important');
+                $("#surveytitlelogo").attr('style', 'max-width: <?php echo $size?>% !important');
             });
         </script>
 
