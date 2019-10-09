@@ -1,3 +1,4 @@
+//Hack for IE because its does not support assign
 if (typeof Object.assign != 'function') {
     Object.assign = function (target) {
         'use strict';
