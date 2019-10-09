@@ -94,7 +94,7 @@ class SurveyUITweaks extends \ExternalModules\AbstractExternalModule
             <script>
                 var SurveyDuration = SurveyDuration || {};
                 SurveyDuration.fields = <?php echo json_encode($fields) ?>;
-                <?php echo file_get_contents($this->getModulePath() . "js/SurveyDuration.js"); ?>
+                <?php echo file_get_contents($this->getModulePath() . "js/surveyduration.js"); ?>
             </script>
         <?php
     }
@@ -240,9 +240,9 @@ class SurveyUITweaks extends \ExternalModules\AbstractExternalModule
             MatrixRanking.config    = <?php echo json_encode($rank_matrices) ?>;
             <?php
                 //THE ORDER OF THE FOLLOWING 3 JS files MUST BE LIKE SO.
-                echo file_get_contents($this->getModulePath() . "js/Sortable.min.js");
+            echo file_get_contents($this->getModulePath() . "js/sortable.min.js");
                 echo file_get_contents($this->getModulePath() . "js/jquery-sortable.js");
-                echo file_get_contents($this->getModulePath() . "js/MatrixRanking.js");
+            echo file_get_contents($this->getModulePath() . "js/matrixranking.js");
             ?>
         </script>
         <?php

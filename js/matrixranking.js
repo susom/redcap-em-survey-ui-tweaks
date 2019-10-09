@@ -109,6 +109,7 @@ MatrixRanking = Object.assign( MatrixRanking, {
 			draggable_div_2.prepend(mtx_instructions);
 		}
 
+        console.log(sort_rank_id);
 		//NOW SET THE UI AS "Sortable"
 		$("#"+sort_rank_id+", #"+sort_rank_target_id+"").sortable({
 			// See: (https://github.com/SortableJS/Sortable#options)
