@@ -388,7 +388,7 @@ class SurveyUITweaks extends \ExternalModules\AbstractExternalModule
                 $("tr.surveysubmit").css({"opacity": 1});
 
                 if($("button:contains(newval)")) {
-                    $('[name = "submit-btn-saverecord"]').attr('style', 'min-width: 140px; color: #800000; width: 100%; padding-left: 10px !important; padding-right: 10px !important; white-space: initial !important; overflow-wrap: break-word !important');
+                    $('[name = "submit-btn-saveprevpage"]').attr('style', 'min-width: 140px; color: #800000; width: 100%; padding-left: 10px !important; padding-right: 10px !important; white-space: initial !important; overflow-wrap: break-word !important');
                 }
             });
         </script>
