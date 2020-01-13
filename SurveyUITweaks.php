@@ -327,6 +327,7 @@ class SurveyUITweaks extends \ExternalModules\AbstractExternalModule
 
     function renameSubmitButton($name)
     {
+        global $lang;
         ?>
         <style>
             tr.surveysubmit {
@@ -337,7 +338,7 @@ class SurveyUITweaks extends \ExternalModules\AbstractExternalModule
         <script type="text/javascript">
             $(document).ready(function () {
                 var newval = "<?php echo $name ?>";
-                $("button:contains('Submit')").text(newval);
+                $("button:contains(<?php echo $lang['survey_200']; ?>)").text(newval);
                 $("tr.surveysubmit").css({"opacity": 1});
 
                 if($("button:contains(newval)")){
@@ -350,6 +351,7 @@ class SurveyUITweaks extends \ExternalModules\AbstractExternalModule
 
     function renameNextButton($name)
     {
+        global $lang;
         ?>
         <style>
             tr.surveysubmit{
@@ -359,7 +361,7 @@ class SurveyUITweaks extends \ExternalModules\AbstractExternalModule
         <script type = "text/javascript">
             $(document).ready(function () {
                 var newval = "<?php echo $name ?>";
-                $("button:contains('Next Page >>')").text(newval);
+                $("button:contains(<?php echo $lang['data_entry_213']; ?>)").text(newval);
                 $("tr.surveysubmit").css({"opacity": 1});
 
                 if($("button:contains(newval)")) {
@@ -372,6 +374,7 @@ class SurveyUITweaks extends \ExternalModules\AbstractExternalModule
 
     function renamePreviousButton($name)
     {
+        global $lang;
         ?>
         <style>
             tr.surveysubmit{
@@ -381,7 +384,7 @@ class SurveyUITweaks extends \ExternalModules\AbstractExternalModule
         <script type = "text/javascript">
             $(document).ready(function () {
                 var newval = "<?php echo $name ?>";
-                $("button:contains('<< Previous Page')").text(newval);
+                $("button:contains(<?php echo $lang['data_entry_214']; ?>)").text(newval);
                 $("tr.surveysubmit").css({"opacity": 1});
 
                 if($("button:contains(newval)")) {
