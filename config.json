@@ -126,6 +126,12 @@
 			"type": "text"
 		},
 		{
+			"key": "global_save_and_return_without_email",
+			"name": "Remove the email option from \"Save and Return Later\", users must have return link and code",
+			"required": false,
+			"type": "checkbox"
+		},
+		{
 			"key": "survey_instructions",
 			"name": "<h5 class='text-center'><span class='text-lg badge badge-lg badge-success'>Survey-specific Tweaks</span></h5>This section allows you to specify a tweak only on a particular survey.  Start by selecting the survey and then indicate which tweaks you wish to apply.",
 			"type": "descriptive"
