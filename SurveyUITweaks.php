@@ -34,17 +34,18 @@ class SurveyUITweaks extends \ExternalModules\AbstractExternalModule
     {
 
         $survey_page_top_tweaks = array(
-            'remove_excess_td'       => 'removeExcessTd',
-            'autoscroll'             => 'autoscroll',
-            'hide_queue_corner'      => 'hideQueueCorner',
-            'hide_font_resize'       => 'hideFontResize',
-            'hide_submit_button'     => 'hideSubmitButton',
-            'rename_submit_button'   => 'renameSubmitButton',
-            'hide_reset_button'      => 'hideResetButton',
-            'rename_next_button'     => 'renameNextButton',
-            'rename_previous_button' => 'renamePreviousButton',
-            'hide_required_text'     => 'hideRequiredText',
-            'resize_survey'          => 'resizeSurvey'
+            'remove_excess_td'              => 'removeExcessTd',
+            'autoscroll'                    => 'autoscroll',
+            'hide_queue_corner'             => 'hideQueueCorner',
+            'hide_font_resize'              => 'hideFontResize',
+            'hide_submit_button'            => 'hideSubmitButton',
+            'rename_submit_button'          => 'renameSubmitButton',
+            'hide_reset_button'             => 'hideResetButton',
+            'rename_next_button'            => 'renameNextButton',
+            'rename_previous_button'        => 'renamePreviousButton',
+            'hide_required_text'            => 'hideRequiredText',
+            'resize_survey'                 => 'resizeSurvey',
+            'save_and_return_without_email' => 'saveAndReturnWithoutEmail'
         );
 
         foreach($survey_page_top_tweaks as $key=>$func) {
@@ -445,6 +446,18 @@ class SurveyUITweaks extends \ExternalModules\AbstractExternalModule
 
         <?php
     }
+
+    function saveAndReturnWithoutEmail(){
+        ?>
+        <script type = "text/javascript">
+            $(document).ready(function(){
+                $(document.querySelector("#return_instructions > div > div:nth-child(5)")).remove();
+                $(document.querySelector("#return_instructions > div > div:nth-child(4) > span:nth-child(8)")).remove();
+                $(document.querySelector("#return-step1")).text('A return code is *required* in order to continue the survey where you left off. Please write down the value listed below as well as as the URL of this page.');
+            });
+        </script>
+        <?php
+}
 
 
 
