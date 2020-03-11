@@ -44,8 +44,7 @@ class SurveyUITweaks extends \ExternalModules\AbstractExternalModule
             'rename_next_button'            => 'renameNextButton',
             'rename_previous_button'        => 'renamePreviousButton',
             'hide_required_text'            => 'hideRequiredText',
-            'resize_survey'                 => 'resizeSurvey',
-            'save_and_return_without_email' => 'saveAndReturnWithoutEmail'
+            'resize_survey'                 => 'resizeSurvey'
         );
 
         foreach($survey_page_top_tweaks as $key=>$func) {
@@ -55,6 +54,20 @@ class SurveyUITweaks extends \ExternalModules\AbstractExternalModule
         $this->checkSurveyDuration($instrument);
         $this->checkMatrixRank($instrument);
 
+    }
+
+    # TWEAKS FOR EVERY_PAGE_TOP
+    function redcap_every_page_top($project_id, $record, $instrument, $event_id, $group_id, $survey_hash, $response_id, $repeat_instance)
+    {
+
+        $every_page_top_tweaks = array(
+            'save_and_return_without_email' => 'saveAndReturnWithoutEmail'
+
+        );
+
+        foreach($every_page_top_tweaks as $key=>$func) {
+            $this->checkFeature($key, $func, $instrument);
+        }
     }
 
 
@@ -447,7 +460,8 @@ class SurveyUITweaks extends \ExternalModules\AbstractExternalModule
         <?php
     }
 
-    function saveAndReturnWithoutEmail(){
+    function saveAndReturnWithoutEmail()
+    {
         ?>
         <script type = "text/javascript">
             $(document).ready(function(){
