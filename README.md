@@ -24,4 +24,6 @@ This module provides end users with the ability to apply certain survey tweaks e
 
 1. **Hide required field text:** De-clutter your page on surveys with many required fields.
 
+1. **Save and Return without email:** Remove the option to send a return link to the user's email. Users must save the url themselves.
+
 What's next?  Up to you.  Post an issue as a request on the github site or fork and make a pull request on your own.
