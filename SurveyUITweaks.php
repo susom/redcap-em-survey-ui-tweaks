@@ -59,16 +59,16 @@ class SurveyUITweaks extends \ExternalModules\AbstractExternalModule
     # TWEAKS FOR EVERY_PAGE_TOP
     function redcap_every_page_top($project_id)
     {
-        global $instrument;
+        $every_page_top_tweaks = array();
 
-
-        $every_page_top_tweaks = array(
-            'save_and_return_without_email' => 'saveAndReturnWithoutEmail'
-        );
+        // Handle save and return page which doesn't fit under survey_page_top or survey_complete
+        if (PAGE === "surveys/index.php" && isset($_GET['__return'])) {
+            $every_page_top_tweaks['save_and_return_without_email'] = 'saveAndReturnWithoutEmail';
+        }
 
         foreach($every_page_top_tweaks as $key=>$func) {
-            $this->emDebug("Instrument is " . $instrument);
-            $this->checkFeature($key, $func, $instrument);
+            // We do not have an instrument name in this hook so only global hooks are supported
+            $this->checkFeature($key, $func, null);
         }
     }
 
@@ -497,7 +497,7 @@ class SurveyUITweaks extends \ExternalModules\AbstractExternalModule
         if ($global_setting) {
             $this->emDebug("enabling global $funcName");
             call_user_func_array(array($this, $funcName), empty($args) ? array($global_setting) : $args);
-        } else {
+        } elseif (!empty($instrument)) {
             foreach ($this->settings as $settings) {
                 if (array_key_exists($keyName, $settings)) $keyFound=true;
                 if ($settings['survey_name'] == $instrument && $settings[$keyName]) {
