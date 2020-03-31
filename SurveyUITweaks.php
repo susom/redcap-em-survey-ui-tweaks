@@ -67,7 +67,7 @@ class SurveyUITweaks extends \ExternalModules\AbstractExternalModule
         );
 
         foreach($every_page_top_tweaks as $key=>$func) {
-            $this->emDebug("Instrument is " . $instrument)
+            $this->emDebug("Instrument is " . $instrument);
             $this->checkFeature($key, $func, $instrument);
         }
     }
