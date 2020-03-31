@@ -57,15 +57,17 @@ class SurveyUITweaks extends \ExternalModules\AbstractExternalModule
     }
 
     # TWEAKS FOR EVERY_PAGE_TOP
-    function redcap_every_page_top($project_id, $record, $instrument, $event_id, $group_id, $survey_hash, $response_id, $repeat_instance)
+    function redcap_every_page_top($project_id)
     {
+        global $instrument;
+
 
         $every_page_top_tweaks = array(
             'save_and_return_without_email' => 'saveAndReturnWithoutEmail'
-
         );
 
         foreach($every_page_top_tweaks as $key=>$func) {
+            $this->emDebug("Instrument is " . $instrument)
             $this->checkFeature($key, $func, $instrument);
         }
     }
