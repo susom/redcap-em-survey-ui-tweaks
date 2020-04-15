@@ -152,6 +152,40 @@
 					"type": "form-list"
 				},
 				{
+					"key": "survey_share",
+					"name": "Share Survey Link on Social Media",
+					"required": false,
+					"type": "sub_settings",
+					"repeatable": true,
+					"sub_settings": [
+						{
+							"key": "social_platform",
+							"name": "<b>Social Links</b><br>Select which platform to generate share link to:",
+							"required": false,
+							"type": "dropdown",
+							"choices": [
+								{
+									"name": "Email",
+									"value": "envelope"
+								},
+								{
+									"name": "Facebook",
+									"value": "facebook"
+								},
+								{
+									"name": "Twitter",
+									"value": "twitter"
+								},
+								{
+									"name": "LinkedIn",
+									"value": "linkedin"
+								}
+							]
+						}
+
+					]
+				},
+				{
 					"key": "remove_excess_td",
 					"name": "Remove the extra space on the left of questions (survey must be set to 'Custom numbered')",
 					"required": false,

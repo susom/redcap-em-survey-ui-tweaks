@@ -18,6 +18,7 @@ class SurveyUITweaks extends \ExternalModules\AbstractExternalModule
     use emLoggerTrait;
 
     public $settings;   // Per survey subsettings
+    public $title;
 
     function __construct()
     {
@@ -26,12 +27,14 @@ class SurveyUITweaks extends \ExternalModules\AbstractExternalModule
             // Load the project settings
             $this->settings = $this->getSubSettings('survey_tweaks');
         }
+
     }
 
 
     ## THESE ARE TWEAKS FOR SURVEY_PAGE_TOP
     function redcap_survey_page_top($project_id, $record, $instrument, $event_id, $group_id, $survey_hash, $response_id, $repeat_instance)
     {
+        $this->title = $instrument;
 
         $survey_page_top_tweaks = array(
             'remove_excess_td'              => 'removeExcessTd',
@@ -44,7 +47,8 @@ class SurveyUITweaks extends \ExternalModules\AbstractExternalModule
             'rename_next_button'            => 'renameNextButton',
             'rename_previous_button'        => 'renamePreviousButton',
             'hide_required_text'            => 'hideRequiredText',
-            'resize_survey'                 => 'resizeSurvey'
+            'resize_survey'                 => 'resizeSurvey',
+            'survey_share'                  => 'surveyShare'
         );
 
         foreach($survey_page_top_tweaks as $key=>$func) {
@@ -59,6 +63,8 @@ class SurveyUITweaks extends \ExternalModules\AbstractExternalModule
     # TWEAKS FOR EVERY_PAGE_TOP
     function redcap_every_page_top($project_id)
     {
+        echo '<link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">';
+
         $every_page_top_tweaks = array();
 
         // Handle save and return page which doesn't fit under survey_page_top or survey_complete
@@ -76,10 +82,10 @@ class SurveyUITweaks extends \ExternalModules\AbstractExternalModule
     ## THESE ARE TWEAKS FOR SURVEY_COMPLETE
     function redcap_survey_complete($project_id, $record, $instrument, $event_id, $group_id, $survey_hash, $response_id, $repeat_instance)
     {
-        $this->emDebug($instrument . "here");
-
+        $this->title = $instrument;
         $survey_complete_tweaks = array(
-            'hide_queue_end'       => 'hideQueueEnd'
+            'hide_queue_end'        => 'hideQueueEnd',
+            'survey_share'          => 'surveyShare'
         );
 
         foreach($survey_complete_tweaks as $key=>$func) {
@@ -285,7 +291,6 @@ class SurveyUITweaks extends \ExternalModules\AbstractExternalModule
         }
     }
 
-
     function hideSubmitButton()
     {
         // TODO: Change to CSS fix instead of JS
@@ -304,7 +309,6 @@ class SurveyUITweaks extends \ExternalModules\AbstractExternalModule
         <?php
     }
 
-
     function hideQueueCorner()
     {
         ?>
@@ -315,7 +319,6 @@ class SurveyUITweaks extends \ExternalModules\AbstractExternalModule
         </style>
         <?php
     }
-
 
     function hideFontResize()
     {
@@ -328,7 +331,6 @@ class SurveyUITweaks extends \ExternalModules\AbstractExternalModule
         <?php
     }
 
-
     function autoscroll()
     {
         ?>
@@ -340,6 +342,64 @@ class SurveyUITweaks extends \ExternalModules\AbstractExternalModule
         echo "<script>" . file_get_contents($this->getModulePath() . "/js/autoscroll.js") . "</script>";
     }
 
+    function surveyShare(){
+        ?>
+        <style>
+            #media_share { text-align:right; padding:5px 10px 10px; }
+            #media_share .fa {
+                font-size:18px;
+                vertical-align: bottom;
+                margin-left:3px;
+            }
+        </style>
+        <?php
+        $social_shares = $this->getProjectSetting("social_platform");
+        if(!empty($social_shares)){
+            $pretty_title = ucwords(str_replace("_", " ", $this->title));  //TODO theres a redcap function or var for this already.
+
+            $html   = "<div id='media_share'>";
+            $html   .= "<span>Share :</span>";
+
+            foreach(current($social_shares) as $key => $icon){
+                $project_name   = $pretty_title;
+                $survey_url     = $this->getPublicSurveyUrl();
+                switch($icon){
+                    case "envelope":
+                        $href   = "mailto:?Subject=" . $project_name . "&amp;Body=" . $survey_url;
+                        break;
+
+                    case "facebook":
+                        $href   = "http://www.facebook.com/sharer.php?s=100&p%5burl%5d=" . $survey_url;
+                        break;
+
+                    case "twitter":
+                        $href   = "https://twitter.com/share?url=" . $survey_url;
+                        break;
+
+                    case "linkedin":
+                        $href   = "http://www.linkedin.com/shareArticle?mini=true&url=".$survey_url."&title=" . $project_name;
+                        break;
+
+                    default :
+                        $href   = "#"; //TODO
+                        break;
+                }
+
+                $media  = $icon == "envelope" ? "email" : $icon;
+                $title  = "Share via $media";
+                $html .= "<a title='$title' href='$href'><i class='fa fa-$icon'></i></a>";
+            }
+            $html .= "</div>";
+            ?>
+            <script>
+            $(document).ready(function(){
+                var insertHTML = $("<?php echo $html ?>");
+                insertHTML.insertBefore($("#pagecontent")); //insertHTML.insertAfter("#surveyinstructions");
+            });
+            </script>
+            <?php
+        }
+    }
 
     function renameSubmitButton($name)
     {
@@ -488,9 +548,9 @@ class SurveyUITweaks extends \ExternalModules\AbstractExternalModule
      */
     function checkFeature($keyName, $funcName, $instrument, $args = array())
     {
-        $globalKey = 'global_' . $keyName;
-        $projectSettings = $this->getProjectSettings();
-        $keyFound = array_key_exists($globalKey, $projectSettings);
+        $globalKey          = 'global_' . $keyName;
+        $projectSettings    = $this->getProjectSettings();
+        $keyFound           = array_key_exists($globalKey, $projectSettings);
 
         $global_setting = $this->getProjectSetting($globalKey);
 
