@@ -63,8 +63,6 @@ class SurveyUITweaks extends \ExternalModules\AbstractExternalModule
     # TWEAKS FOR EVERY_PAGE_TOP
     function redcap_every_page_top($project_id)
     {
-        echo '<link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">';
-
         $every_page_top_tweaks = array();
 
         // Handle save and return page which doesn't fit under survey_page_top or survey_complete
@@ -348,7 +346,7 @@ class SurveyUITweaks extends \ExternalModules\AbstractExternalModule
             #media_share { text-align:right; padding:5px 10px 10px; }
             #media_share .fa {
                 font-size:18px;
-                vertical-align: bottom;
+                vertical-align: baseline;
                 margin-left:3px;
             }
         </style>
