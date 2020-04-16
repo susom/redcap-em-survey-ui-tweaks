@@ -348,22 +348,41 @@ class SurveyUITweaks extends \ExternalModules\AbstractExternalModule
                 font-size:18px;
                 vertical-align: baseline;
                 margin-left:3px;
+                width:19px; height:19px;
+            }
+            #media_share .fa-facebook{
+                background:url(<?php echo $this->getUrl('img/icon_social_media.png',true,true ) ?>) top left no-repeat;
+                background-size:300%;
+            }
+            #media_share .fa-twitter{
+                background:url(<?php echo $this->getUrl('img/icon_social_media.png',true,true ) ?>) top right no-repeat;
+                background-size:300%;
+            }
+            #media_share .fa-linkedin{
+                background:url(<?php echo $this->getUrl('img/icon_social_media.png',true,true ) ?>) -19px 0 no-repeat;
+                background-size:300%;
+            }
+            #media_share .fa-facebook:before,
+            #media_share .fa-linkedin:before,
+            #media_share .fa-twitter:before{
+                visibility:hidden;
             }
         </style>
         <?php
-        $social_shares = $this->getProjectSetting("social_platform");
+        $social_shares          = current($this->getProjectSetting("social_platform"));
+        $social_shares_titles   = current($this->getProjectSetting("social_platform_title"));
         if(!empty($social_shares)){
             $pretty_title = ucwords(str_replace("_", " ", $this->title));  //TODO theres a redcap function or var for this already.
 
             $html   = "<div id='media_share'>";
             $html   .= "<span>Share :</span>";
 
-            foreach(current($social_shares) as $key => $icon){
-                $project_name   = $pretty_title;
+            foreach($social_shares as $key => $icon){
+                $project_title  = $social_shares_titles[$key] . " " . $pretty_title;
                 $survey_url     = $this->getPublicSurveyUrl();
                 switch($icon){
                     case "envelope":
-                        $href   = "mailto:?Subject=" . $project_name . "&amp;Body=" . $survey_url;
+                        $href   = "mailto:?Subject=" . $project_title . "&amp;Body=" . $survey_url;
                         break;
 
                     case "facebook":
@@ -375,7 +394,7 @@ class SurveyUITweaks extends \ExternalModules\AbstractExternalModule
                         break;
 
                     case "linkedin":
-                        $href   = "http://www.linkedin.com/shareArticle?mini=true&url=".$survey_url."&title=" . $project_name;
+                        $href   = "http://www.linkedin.com/shareArticle?mini=true&url=".$survey_url."&title=" . $project_title;
                         break;
 
                     default :

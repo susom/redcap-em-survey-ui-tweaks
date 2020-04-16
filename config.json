@@ -181,6 +181,12 @@
 									"value": "linkedin"
 								}
 							]
+						},
+						{
+							"key": "social_platform_title",
+							"name": "<b>Custom title</b><br>Custom share title if applicable:",
+							"required": false,
+							"type": "text"
 						}
 
 					]
