@@ -48,7 +48,7 @@ class SurveyUITweaks extends \ExternalModules\AbstractExternalModule
             'rename_previous_button'        => 'renamePreviousButton',
             'hide_required_text'            => 'hideRequiredText',
             'resize_survey'                 => 'resizeSurvey',
-            'survey_share'                  => 'surveyShare'
+            'social_share'                  => 'socialShare'
         );
 
         foreach($survey_page_top_tweaks as $key=>$func) {
@@ -83,7 +83,7 @@ class SurveyUITweaks extends \ExternalModules\AbstractExternalModule
         $this->title = $instrument;
         $survey_complete_tweaks = array(
             'hide_queue_end'        => 'hideQueueEnd',
-            'survey_share'          => 'surveyShare'
+            'social_share'          => 'SocialShare'
         );
 
         foreach($survey_complete_tweaks as $key=>$func) {
@@ -340,7 +340,8 @@ class SurveyUITweaks extends \ExternalModules\AbstractExternalModule
         echo "<script>" . file_get_contents($this->getModulePath() . "/js/autoscroll.js") . "</script>";
     }
 
-    function surveyShare(){
+    function socialShare(){
+        // WHEN WE UPDATE TO FONTAWESOME 5, THEN CAN STOP USING THE HARD IMAGES, AND JUST USE THE FONT CALL
         ?>
         <style>
             #media_share { text-align:right; padding:5px 10px 10px; }
@@ -369,53 +370,52 @@ class SurveyUITweaks extends \ExternalModules\AbstractExternalModule
             }
         </style>
         <?php
-        $social_shares          = current($this->getProjectSetting("social_platform"));
-        $social_shares_titles   = current($this->getProjectSetting("social_platform_title"));
-        if(!empty($social_shares)){
-            $pretty_title = ucwords(str_replace("_", " ", $this->title));  //TODO theres a redcap function or var for this already.
+        $show_social_share_title    = $this->getProjectSetting("global_social_share_title");
+        $pretty_title               = ucwords(str_replace("_", " ", $this->title));  //TODO theres a redcap function or var for this already somwher
+        $survey_url                 = $this->getPublicSurveyUrl();
 
-            $html   = "<div id='media_share'>";
-            $html   .= "<span>Share :</span>";
+        $html   = "<div id='media_share'>";
+        $html   .= "<span>Share :</span>";
 
-            foreach($social_shares as $key => $icon){
-                $project_title  = $social_shares_titles[$key] . " " . $pretty_title;
-                $survey_url     = $this->getPublicSurveyUrl();
-                switch($icon){
-                    case "envelope":
-                        $href   = "mailto:?Subject=" . $project_title . "&amp;Body=" . $survey_url;
-                        break;
+        // TODO, BETTER WAY TO CURATE THIS FONTAWESOME LIST?
+        $social_shares = array("envelope", "facebook", "twitter", "linkedin");
+        foreach($social_shares as $key => $icon){
+            $project_title  = !empty($show_social_share_title) ? $show_social_share_title . " " . $pretty_title : $pretty_title;
+            switch($icon){
+                case "envelope":
+                    $href   = "mailto:?Subject=" . $project_title . "&amp;Body=" . $survey_url;
+                    break;
 
-                    case "facebook":
-                        $href   = "http://www.facebook.com/sharer.php?s=100&p%5burl%5d=" . $survey_url;
-                        break;
+                case "facebook":
+                    $href   = "http://www.facebook.com/sharer.php?s=100&p%5burl%5d=" . $survey_url;
+                    break;
 
-                    case "twitter":
-                        $href   = "https://twitter.com/share?url=" . $survey_url;
-                        break;
+                case "twitter":
+                    $href   = "https://twitter.com/share?url=" . $survey_url;
+                    break;
 
-                    case "linkedin":
-                        $href   = "http://www.linkedin.com/shareArticle?mini=true&url=".$survey_url."&title=" . $project_title;
-                        break;
+                case "linkedin":
+                    $href   = "http://www.linkedin.com/shareArticle?mini=true&url=".$survey_url."&title=" . $project_title;
+                    break;
 
-                    default :
-                        $href   = "#"; //TODO
-                        break;
-                }
-
-                $media  = $icon == "envelope" ? "email" : $icon;
-                $title  = "Share via $media";
-                $html .= "<a title='$title' href='$href'><i class='fa fa-$icon'></i></a>";
+                default :
+                    $href   = "#"; //TODO ??
+                    break;
             }
-            $html .= "</div>";
-            ?>
-            <script>
-            $(document).ready(function(){
-                var insertHTML = $("<?php echo $html ?>");
-                insertHTML.insertBefore($("#pagecontent")); //insertHTML.insertAfter("#surveyinstructions");
-            });
-            </script>
-            <?php
+
+            $media  = $icon == "envelope" ? "email" : $icon;
+            $title  = "Share via $media";
+            $html .= "<a title='$title' href='$href'><i class='fa fa-$icon'></i></a>";
         }
+        $html .= "</div>";
+        ?>
+        <script>
+        $(document).ready(function(){
+            var insertHTML = $("<?php echo $html ?>");
+            insertHTML.insertBefore($("#pagecontent"));
+        });
+        </script>
+        <?php
     }
 
     function renameSubmitButton($name)
@@ -569,7 +569,7 @@ class SurveyUITweaks extends \ExternalModules\AbstractExternalModule
         $projectSettings    = $this->getProjectSettings();
         $keyFound           = array_key_exists($globalKey, $projectSettings);
 
-        $global_setting = $this->getProjectSetting($globalKey);
+        $global_setting     = $this->getProjectSetting($globalKey);
 
         if ($global_setting) {
             $this->emDebug("enabling global $funcName");

@@ -134,6 +134,18 @@
 			"type": "checkbox"
 		},
 		{
+			"key": "global_social_share",
+			"name": "Add Share (survey link) on Social Media Icons",
+			"required": false,
+			"type": "checkbox"
+		},
+		{
+			"key": "global_social_share_title",
+			"name": "Custom Social Media Share title (if applicable):",
+			"required": false,
+			"type": "text"
+		},
+		{
 			"key": "survey_instructions",
 			"name": "<h5 class='text-center'><span class='text-lg badge badge-lg badge-success'>Survey-specific Tweaks</span></h5>This section allows you to specify a tweak only on a particular survey.  Start by selecting the survey and then indicate which tweaks you wish to apply.",
 			"type": "descriptive"
@@ -150,46 +162,6 @@
 					"name": "<b>Survey Name</b><br>Select which survey you want to selectively apply the following tweaks to:",
 					"required": false,
 					"type": "form-list"
-				},
-				{
-					"key": "survey_share",
-					"name": "Share Survey Link on Social Media",
-					"required": false,
-					"type": "sub_settings",
-					"repeatable": true,
-					"sub_settings": [
-						{
-							"key": "social_platform",
-							"name": "<b>Social Links</b><br>Select which platform to generate share link to:",
-							"required": false,
-							"type": "dropdown",
-							"choices": [
-								{
-									"name": "Email",
-									"value": "envelope"
-								},
-								{
-									"name": "Facebook",
-									"value": "facebook"
-								},
-								{
-									"name": "Twitter",
-									"value": "twitter"
-								},
-								{
-									"name": "LinkedIn",
-									"value": "linkedin"
-								}
-							]
-						},
-						{
-							"key": "social_platform_title",
-							"name": "<b>Custom title</b><br>Custom share title if applicable:",
-							"required": false,
-							"type": "text"
-						}
-
-					]
 				},
 				{
 					"key": "remove_excess_td",
@@ -286,7 +258,6 @@
 				}
 			]
 		},
-
 		{
 			"key": "sortrank",
 			"name": "Enhanced Drag and Drop Matrix Ranking",
