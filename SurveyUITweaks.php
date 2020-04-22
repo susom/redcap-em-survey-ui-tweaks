@@ -58,6 +58,8 @@ class SurveyUITweaks extends \ExternalModules\AbstractExternalModule
         $this->checkSurveyDuration($instrument);
         $this->checkMatrixRank($instrument);
 
+        // TODO put recommendation to fix this as part of REDCap.  for now put it in here
+        echo "<style>#survey_logo { width:100% !important; height:auto !important; }</style>";
     }
 
     # TWEAKS FOR EVERY_PAGE_TOP
