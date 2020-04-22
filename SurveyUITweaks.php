@@ -48,7 +48,8 @@ class SurveyUITweaks extends \ExternalModules\AbstractExternalModule
             'rename_previous_button'        => 'renamePreviousButton',
             'hide_required_text'            => 'hideRequiredText',
             'resize_survey'                 => 'resizeSurvey',
-            'social_share'                  => 'socialShare'
+            'social_share'                  => 'socialShare',
+            'responsive_td_fix'             => 'customTDFix',
         );
 
         foreach($survey_page_top_tweaks as $key=>$func) {
@@ -58,7 +59,7 @@ class SurveyUITweaks extends \ExternalModules\AbstractExternalModule
         $this->checkSurveyDuration($instrument);
         $this->checkMatrixRank($instrument);
 
-        // TODO put recommendation to fix this as part of REDCap.  for now put it in here
+        // TODO put recommendation to fix this as part of REDCap pull request.  for now put it in here
         echo "<style>#survey_logo { width:100% !important; height:auto !important; }</style>";
     }
 
@@ -416,6 +417,30 @@ class SurveyUITweaks extends \ExternalModules\AbstractExternalModule
             var insertHTML = $("<?php echo $html ?>");
             insertHTML.insertBefore($("#pagecontent"));
         });
+        </script>
+        <?php
+    }
+
+    function customTDFix(){
+        ?>
+        <style>
+            @media only screen and (max-width: 600px) {
+                #survey_logo {
+                    width:100% !important;
+                    height:auto !important;
+                }
+                #questiontable td {
+                    width:100%;
+                    display:block !important;
+                    box-sizing:border-box;
+                    clear:both ;
+                    max-width:initial !important;
+                    flex: auto !important;
+                }
+            }
+        </style>
+        <script>
+            $("#pagecontainer").attr("style","max-width:100% !important;");
         </script>
         <?php
     }

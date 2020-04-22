@@ -146,6 +146,13 @@
 			"type": "text"
 		},
 		{
+			"key": "global_responsive_td_fix",
+			"name": "Custom fix for responsive Table TDs in small view (TODO need figure better way to do this, but this is time sensitive so putting here for now) ",
+			"required": false,
+			"type": "checkbox"
+		},
+
+		{
 			"key": "survey_instructions",
 			"name": "<h5 class='text-center'><span class='text-lg badge badge-lg badge-success'>Survey-specific Tweaks</span></h5>This section allows you to specify a tweak only on a particular survey.  Start by selecting the survey and then indicate which tweaks you wish to apply.",
 			"type": "descriptive"
