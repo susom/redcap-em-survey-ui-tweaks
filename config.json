@@ -235,6 +235,12 @@
 						}
 				},
 				{
+					"key": "survey_login_on_save",
+					"name": "Select a survey below if you want auto-survey-login to occur when this is saved.  This is useful for cases where you do not want to enforce survey login on the initial submission of data.",
+					"required": false,
+					"type": "checkbox"
+				},
+				{
 					"key": "rename_submit_button",
 					"name": "Rename submit button. <br>Enter the new label for the submit button, e.g. <u>Next Page >></u>",
 					"required": false,

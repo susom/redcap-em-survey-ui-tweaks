@@ -4,6 +4,7 @@ namespace Stanford\SurveyUITweaks;
 include_once ("emLoggerTrait.php");
 
 use \REDCap;
+use \Survey;
 
 /**
  *
@@ -19,6 +20,10 @@ class SurveyUITweaks extends \ExternalModules\AbstractExternalModule
 
     public $settings;   // Per survey subsettings
     public $title;
+
+    public $record;
+
+    public $context;    // Args from calling hook function
 
     function __construct()
     {
@@ -84,9 +89,12 @@ class SurveyUITweaks extends \ExternalModules\AbstractExternalModule
     function redcap_survey_complete($project_id, $record, $instrument, $event_id, $group_id, $survey_hash, $response_id, $repeat_instance)
     {
         $this->title = $instrument;
+        $this->record = $record;
+
         $survey_complete_tweaks = array(
             'hide_queue_end'        => 'hideQueueEnd',
-            'social_share'          => 'SocialShare'
+            'social_share'          => 'SocialShare',
+            'survey_login_on_save'  => 'surveyLoginOnSave'
         );
 
         foreach($survey_complete_tweaks as $key=>$func) {
@@ -96,6 +104,29 @@ class SurveyUITweaks extends \ExternalModules\AbstractExternalModule
 
 
     ## ACTUAL TWEAK FUNCTIONS - ADD MORE TO YOUR HEART'S CONTENT!
+
+    /**
+     * This will do a login when the specified survey is saved.
+     */
+    function surveyLoginOnSave() {
+
+        $project_id = $this->getProjectId();
+        global $password_algo, $salt;
+        $record = $this->record;
+
+        // Skip if surveyLogin is not enabled
+        if (! Survey::surveyLoginEnabled()) return;
+
+        // Add cookie to preserve the respondent's login "session" across multiple surveys in a project
+        setcookie('survey_login_pid'.$project_id, hash($password_algo, "$project_id|$record|$salt"),
+                  time()+(Survey::getSurveyLoginAutoLogoutTimer()*60), '/', '', false, true);
+        // Add second cookie that expires when the browser is closed (BOTH cookies must exist to auto-login respondent)
+        setcookie('survey_login_session_pid'.$project_id, hash($password_algo, "$project_id|$record|$salt"), 0, '/', '', false, true);
+
+    }
+
+
+
     function checkSurveyDuration($instrument) {
         // Array of arrays of duration_field => field_name
         $duration_fields = array();
