@@ -54,7 +54,7 @@ class SurveyUITweaks extends \ExternalModules\AbstractExternalModule
             'hide_required_text'            => 'hideRequiredText',
             'resize_survey'                 => 'resizeSurvey',
             'social_share'                  => 'socialShare',
-            'responsive_td_fix'             => 'customTDFix',
+            'responsive_td_fix'             => 'customTDFix'
         );
 
         foreach($survey_page_top_tweaks as $key=>$func) {
@@ -63,7 +63,6 @@ class SurveyUITweaks extends \ExternalModules\AbstractExternalModule
 
         $this->checkSurveyDuration($instrument);
         $this->checkMatrixRank($instrument);
-
         // TODO put recommendation to fix this as part of REDCap pull request.  for now put it in here
         echo "<style>#survey_logo { width:100% !important; height:auto !important; }</style>";
     }
@@ -124,8 +123,6 @@ class SurveyUITweaks extends \ExternalModules\AbstractExternalModule
         setcookie('survey_login_session_pid'.$project_id, hash($password_algo, "$project_id|$record|$salt"), 0, '/', '', false, true);
 
     }
-
-
 
     function checkSurveyDuration($instrument) {
         // Array of arrays of duration_field => field_name
