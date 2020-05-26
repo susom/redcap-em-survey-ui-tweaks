@@ -16,6 +16,11 @@
 
 	"framework-version": 2,
 
+	"compatibility": {
+		"redcap-version-min": "8.11.6",
+		"redcap-version-max": ""
+   	},
+
 	"authors": [
 		{
 			"name": "Andy Martin",
