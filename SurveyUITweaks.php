@@ -30,15 +30,24 @@ class SurveyUITweaks extends \ExternalModules\AbstractExternalModule
         parent::__construct();
         if ($this->getProjectId()) {
             // Load the project settings
-            $this->settings = $this->getSubSettings('survey_tweaks');
+            $this->emDebug("In Project Context!");
+            // https://github.com/vanderbilt/redcap-external-modules/issues/329
+            // $this->settings = $this->framework->getSubSettings('survey_tweaks');
         }
-
     }
 
+    function loadInstances() {
+        if ($this->getProjectId() && empty($this->settings)) {
+            // Load the project settings
+            $this->settings = $this->framework->getSubSettings('survey_tweaks');
+        }
+        // $this->emDebug($this->settings);
+    }
 
     ## THESE ARE TWEAKS FOR SURVEY_PAGE_TOP
     function redcap_survey_page_top($project_id, $record, $instrument, $event_id, $group_id, $survey_hash, $response_id, $repeat_instance)
     {
+        $this->loadInstances();
         $this->title = $instrument;
 
         $survey_page_top_tweaks = array(
@@ -70,6 +79,8 @@ class SurveyUITweaks extends \ExternalModules\AbstractExternalModule
     # TWEAKS FOR EVERY_PAGE_TOP
     function redcap_every_page_top($project_id)
     {
+        $this->loadInstances();
+
         $every_page_top_tweaks = array();
 
         // Handle save and return page which doesn't fit under survey_page_top or survey_complete
@@ -87,6 +98,8 @@ class SurveyUITweaks extends \ExternalModules\AbstractExternalModule
     ## THESE ARE TWEAKS FOR SURVEY_COMPLETE
     function redcap_survey_complete($project_id, $record, $instrument, $event_id, $group_id, $survey_hash, $response_id, $repeat_instance)
     {
+        $this->loadInstances();
+
         $this->title = $instrument;
         $this->record = $record;
 
