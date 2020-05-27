@@ -15,44 +15,44 @@
 	],
 
 	"framework-version": 2,
-
-	"compatibility": {
-		"redcap-version-min": "8.11.6",
-		"redcap-version-max": ""
-   	},
-
-	"authors": [
-		{
-			"name": "Andy Martin",
-			"email": "andy123@stanford.edu",
-			"institution": "Stanford University"
-		},
-		{
-			"name": "YongJae Lee",
-			"email": "jael@stanford.edu",
-			"institution": "Stanford University"
-		},
-		{
-			"name": "Ryan Valentine",
-			"email": "rval@stanford.edu",
-			"institution": "Stanford University"
-		},
-		{
-			"name": "Irvin Szeto",
-			"email": "irvins@stanford.edu",
-			"institution": "Stanford University"
-		}
-	],
-
-	"permissions": [
-		"redcap_survey_page_top",
-		"redcap_survey_complete",
-		"redcap_every_page_top"
-	],
-
-    "enable-every-page-hooks-on-system-pages": false,
-
-	"links": {
+  "compatibility": {
+    "redcap-version-min": "8.11.6",
+    "redcap-version-max": ""
+  },
+  "authors": [
+    {
+      "name": "Andy Martin",
+      "email": "andy123@stanford.edu",
+      "institution": "Stanford University"
+    },
+    {
+      "name": "YongJae Lee",
+      "email": "jael@stanford.edu",
+      "institution": "Stanford University"
+    },
+    {
+      "name": "Ryan Valentine",
+      "email": "rval@stanford.edu",
+      "institution": "Stanford University"
+    },
+    {
+      "name": "Irvin Szeto",
+      "email": "irvins@stanford.edu",
+      "institution": "Stanford University"
+    },
+    {
+      "name": "Ihab Zeedia",
+      "email": "ihabz@stanford.edu",
+      "institution": "Stanford University"
+    }
+  ],
+  "permissions": [
+    "redcap_survey_page_top",
+    "redcap_survey_complete",
+    "redcap_every_page_top"
+  ],
+  "enable-every-page-hooks-on-system-pages": false,
+  "links": {
 		"control-center": [
 		],
 		"project": [
