@@ -30,7 +30,7 @@ class SurveyUITweaks extends \ExternalModules\AbstractExternalModule
         parent::__construct();
         if ($this->getProjectId()) {
             // Load the project settings
-            $this->emDebug("In Project Context!");
+            // $this->emDebug("In Project Context!");
             // https://github.com/vanderbilt/redcap-external-modules/issues/329
             // $this->settings = $this->framework->getSubSettings('survey_tweaks');
         }
@@ -610,11 +610,20 @@ class SurveyUITweaks extends \ExternalModules\AbstractExternalModule
     function saveAndReturnWithoutEmail()
     {
         ?>
+        <style>
+            #return_instructions {display:none;}
+        </style>
         <script type = "text/javascript">
             $(document).ready(function(){
                 $(document.querySelector("#return_instructions > div > div:nth-child(5)")).remove();
                 $(document.querySelector("#return_instructions > div > div:nth-child(4) > span:nth-child(8)")).remove();
                 $(document.querySelector("#return-step1")).text('A return code is *required* in order to continue the survey where you left off. Please write down the value listed below as well as as the URL of this page.');
+
+                $('#provideEmail').html("<label>You may bookmark this page to return to the survey or copy this url:</label>" +
+                    "<div><code>" + window.location.href + "</code></div>");
+                setTimeout(function() {
+                    $('#return_instructions').fadeIn();
+                }, 550);
             });
         </script>
         <?php
