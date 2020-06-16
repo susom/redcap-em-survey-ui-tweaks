@@ -82,7 +82,7 @@
 		},
 		{
 			"key": "global_autoscroll",
-			"name": "Enable autoscroll <b> for all Surveys </b>",
+			"name": "Enable autoscroll <b> for all surveys </b>",
 			"required": false,
 			"type": "checkbox"
 		},
