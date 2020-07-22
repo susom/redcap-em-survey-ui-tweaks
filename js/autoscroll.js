@@ -21,10 +21,10 @@ var emAutoscroll = {
         var status = $('#autoscroll').hasClass('enabled');
         if (status) {
             $('#autoscroll').removeClass('enabled').text("Autoscroll Off");
-            setCookie('autoscroll','-1',365);
+            setCookie('autoscroll','off',365);
         } else {
             $('#autoscroll').addClass('enabled').text("Autoscroll On");
-            setCookie('autoscroll','1',365);
+            setCookie('autoscroll','on',365);
         }
     },
 
@@ -39,7 +39,7 @@ var emAutoscroll = {
         var btn = $('<button class="btn btn-xs enabled" id="autoscroll">AutoScroll On</button>').bind('click',emAutoscroll.toggleAutoscroll);
 
         // Set default state to off if cookie is present
-        if (getCookie('autoscroll') === -1) btn.removeClass('enabled').text("Autoscroll Off");
+        if (getCookie('autoscroll') === 'off') btn.removeClass('enabled').text("Autoscroll Off");
 
         // Render the botton on the page
         if ($('#changeFont').length) {
