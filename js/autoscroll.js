@@ -31,14 +31,17 @@ var emAutoscroll = {
     init: function () {
         //Enable radios
         $('#questiontable tr input[type="radio"]').bind('click',emAutoscroll.scrollToNextTr);
+
         // Enable Selects
         $('#questiontable tr select').bind('change',emAutoscroll.scrollToNextTr);
+
         // Add Button in corner to toggle feature
         var btn = $('<button class="btn btn-xs enabled" id="autoscroll">AutoScroll On</button>').bind('click',emAutoscroll.toggleAutoscroll);
 
-        if (getCookie('autoscroll') === -1) btn.removeClass('enabled');
-        //emAutoscroll.toggleAutoscroll();
+        // Set default state to off if cookie is present
+        if (getCookie('autoscroll') === -1) btn.removeClass('enabled').text("Autoscroll Off");
 
+        // Render the botton on the page
         if ($('#changeFont').length) {
             // Survey
             $('#changeFont').prepend(btn);//.bind('click',emAutoscroll.toggleAutoscroll());
