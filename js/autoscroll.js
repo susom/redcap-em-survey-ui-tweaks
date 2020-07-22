@@ -40,9 +40,7 @@ var emAutoscroll = {
         var btn = $('<button class="btn btn-xs enabled" id="autoscroll">AutoScroll On</button>').bind('click',emAutoscroll.toggleAutoscroll);
         if ($('#changeFont').length) {
             // Survey
-            setTimeout(function() {
-                $('#changeFont').prepend(btn).bind('click',emAutoscroll.toggleAutoscroll());
-            }, 200);
+            $('#changeFont').prepend(btn).bind('click',emAutoscroll.toggleAutoscroll());
         } else if ($('#pdfExportDropdownTrigger').length) {
             // Data entry forms
             $('#pdfExportDropdownTrigger').after(btn).bind('click',emAutoscroll.toggleAutoscroll());
@@ -53,6 +51,7 @@ var emAutoscroll = {
 
 
 $(document).ready(function() {
-
-    emAutoscroll.init();
+    setTimeout(function() {
+        emAutoscroll.init();
+    },200);
 });
