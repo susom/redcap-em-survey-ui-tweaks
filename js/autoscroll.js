@@ -1,6 +1,5 @@
 var emAutoscroll = {
     scrollToNextTr: function(){
-
         if ( $('#autoscroll').hasClass('enabled') ) {
             // Skip Matrix Radios
             if ($(this).closest('td').hasClass('choicematrix')) return;
@@ -34,10 +33,12 @@ var emAutoscroll = {
         $('#questiontable tr input[type="radio"]').bind('click',emAutoscroll.scrollToNextTr);
         // Enable Selects
         $('#questiontable tr select').bind('change',emAutoscroll.scrollToNextTr);
-
         // Add Button in corner to toggle feature
-        // On 2020-07-23 noticed that there is an apparent conflict
         var btn = $('<button class="btn btn-xs enabled" id="autoscroll">AutoScroll On</button>').bind('click',emAutoscroll.toggleAutoscroll);
+
+        if (getCookie('autoscroll') === -1) btn.removeClass('enabled');
+        //emAutoscroll.toggleAutoscroll();
+
         if ($('#changeFont').length) {
             // Survey
             $('#changeFont').prepend(btn).bind('click',emAutoscroll.toggleAutoscroll());
@@ -45,12 +46,12 @@ var emAutoscroll = {
             // Data entry forms
             $('#pdfExportDropdownTrigger').after(btn).bind('click',emAutoscroll.toggleAutoscroll());
         }
-        if (getCookie('autoscroll') == -1) emAutoscroll.toggleAutoscroll();
     }
 };
 
 
 $(document).ready(function() {
+    // Add a delay so that text size change can complete being rendered
     setTimeout(function() {
         emAutoscroll.init();
     },200);
