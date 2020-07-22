@@ -34,11 +34,15 @@ var emAutoscroll = {
         $('#questiontable tr input[type="radio"]').bind('click',emAutoscroll.scrollToNextTr);
         // Enable Selects
         $('#questiontable tr select').bind('change',emAutoscroll.scrollToNextTr);
+
         // Add Button in corner to toggle feature
+        // On 2020-07-23 noticed that there is an apparent conflict
         var btn = $('<button class="btn btn-xs enabled" id="autoscroll">AutoScroll On</button>').bind('click',emAutoscroll.toggleAutoscroll);
         if ($('#changeFont').length) {
             // Survey
-            $('#changeFont').prepend(btn).bind('click',emAutoscroll.toggleAutoscroll());
+            setTimeout(function() {
+                $('#changeFont').prepend(btn).bind('click',emAutoscroll.toggleAutoscroll());
+            }, 200);
         } else if ($('#pdfExportDropdownTrigger').length) {
             // Data entry forms
             $('#pdfExportDropdownTrigger').after(btn).bind('click',emAutoscroll.toggleAutoscroll());
