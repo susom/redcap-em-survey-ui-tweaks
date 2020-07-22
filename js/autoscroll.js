@@ -10,7 +10,7 @@ var emAutoscroll = {
             var timeoutId = window.setTimeout(function() {
                 if (nextTr = $(currentTr).nextAll('tr:visible').first()) {
                     $("html, body").animate({
-                        scrollTop: $(nextTr).offset().top
+                        scrollTop: $(nextTr).offset().top+10
                     }, 300);
                 }
             },100,currentTr);
