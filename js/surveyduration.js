@@ -14,7 +14,7 @@ SurveyDuration.Clock = function( autoStart ) {
 
 };
 
-Object.assign( SurveyDuration.Clock.prototype, {
+$.extend( SurveyDuration.Clock.prototype, {
 
 	start: function () {
 
