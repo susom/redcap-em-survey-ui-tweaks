@@ -1,3 +1,4 @@
+
 var emAutoscroll = {
     scrollToNextTr: function(){
         if ( $('#autoscroll').hasClass('enabled') ) {
@@ -25,7 +26,6 @@ var emAutoscroll = {
             $('#autoscroll').addClass('enabled').text("Autoscroll On");
             setCookie('autoscroll','1',365);
         }
-
     },
 
     init: function () {
@@ -41,10 +41,10 @@ var emAutoscroll = {
 
         if ($('#changeFont').length) {
             // Survey
-            $('#changeFont').prepend(btn).bind('click',emAutoscroll.toggleAutoscroll());
+            $('#changeFont').prepend(btn);//.bind('click',emAutoscroll.toggleAutoscroll());
         } else if ($('#pdfExportDropdownTrigger').length) {
             // Data entry forms
-            $('#pdfExportDropdownTrigger').after(btn).bind('click',emAutoscroll.toggleAutoscroll());
+            $('#pdfExportDropdownTrigger').after(btn);//.bind('click',emAutoscroll.toggleAutoscroll());
         }
     }
 };
