@@ -171,7 +171,10 @@ MatrixRanking = Object.assign( MatrixRanking, {
                             $(this).prepend(rank_badge);
                         }
                     }
-                    $(mtx_order).click();
+                    setTimeout(function(){
+                        // newest redcap version adds new UI / js to matrix ranking ... small 100ms timeout will allow this to wait oout RC check, and then reset rankings
+                        $(mtx_order).click();
+                    },100);
                 });
             }
         });
