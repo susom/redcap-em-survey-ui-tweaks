@@ -28,10 +28,11 @@ MatrixRanking = Object.assign( MatrixRanking, {
     init: function () {
         //PARSE the MatrixRank.config to Tweak Matrix UI from radio buttons to Drag n Drop
         var matrix_rank_names = Object.keys(this.config);
+        
         this.hideDefault(matrix_rank_names);
 
         this.checkState(matrix_rank_names);
-
+        
         for(var mtx_grp in this.config){
             this.constructNewUI(mtx_grp, this.config[mtx_grp]);
         }
@@ -82,6 +83,7 @@ MatrixRanking = Object.assign( MatrixRanking, {
 
         var stored_nam_lab 	= {};
         var randomize_opts 	= [];
+
         for (var i in mtx_grp_config["names"]){
             if(un_checked.indexOf(mtx_grp_config["names"][i]) < 0){
                 stored_nam_lab[mtx_grp_config["names"][i]] = mtx_grp_config["labels"][i];
@@ -90,7 +92,12 @@ MatrixRanking = Object.assign( MatrixRanking, {
 
             var input_prefix 	= "#mtxopt-";
             var mtx_pfx 		= input_prefix + mtx_grp_config["names"][i] + "_";
-            var label 			= $("<li>").text(mtx_grp_config["labels"][i]).attr("data-checkgrp",mtx_pfx);
+            var label 			= $("<li>").text(mtx_grp_config["labels"][i]).attr("data-checkgrp",mtx_pfx).addClass("draggable_" + mtx_grp_config["names"][i]);
+
+            // if branched hidden, then will need to hide in the new UI as well
+            if(this.branched_hidden.indexOf(mtx_grp_config["names"][i]) > -1){
+                label.addClass("branch_hidden");
+            }
 
             if(randomize_options){
                 randomize_opts.push(label);
@@ -132,7 +139,6 @@ MatrixRanking = Object.assign( MatrixRanking, {
             draggable_div_2.prepend(mtx_instructions);
         }
 
-        console.log(sort_rank_id);
         //NOW SET THE UI AS "Sortable"
         $("#"+sort_rank_id+", #"+sort_rank_target_id+"").sortable({
             // See: (https://github.com/SortableJS/Sortable#options)
@@ -179,10 +185,15 @@ MatrixRanking = Object.assign( MatrixRanking, {
             }
         });
 
+        //FIRST matrix var is used to make the header , so just make it show whether a branch has been activated or not
+        let matrix_header = "#" + mtx_grp_config["names"][0]+"-sh-tr";
+        $(matrix_header).addClass("show_overide");
         return;
     },
 
     checkState: function(){
+        this.branched_hidden = [];
+
         // Since REDCAP already Populating the Original Matrix with Values, Might be more efficient To just pull the values from there? And Put it in MatrixRanking.config
         //Loop through the Var names of the Relevant Matrix Rank inputs and see if they have value
         for (var i in this.config){
@@ -194,7 +205,27 @@ MatrixRanking = Object.assign( MatrixRanking, {
                 if(varval){
                     saved_values[varval] = varname;
                 }
+
+                //for initial load on screen, will match the display visiblity (incase branching);
+                var vartr = "#" + varname + "-tr";
+
+                if($(vartr).length && !$(vartr).is(":visible")){
+                    this.branched_hidden.push(varname);
+                }
+
+                $( vartr ).on( varname + '-visibility', function() {
+                    var _this    = $( this );
+                    setInterval( function() {
+                        let varname = ".draggable_"+_this.attr("sq_id");
+                        if( _this.is( ':hidden' ) ) {
+                            $(varname).addClass("branch_hidden");
+                        } else {
+                            $(varname).removeClass("branch_hidden");
+                        }
+                    }, 300 );
+                }).trigger( varname + '-visibility' );
             }
+
             //IF THERE IS A STORED STATE VALUE, IT WILL BE IN the Property "saved_values"
             if(Object.keys(saved_values).length){
                 this.config[i]["saved_values"] = saved_values;
@@ -208,4 +239,6 @@ MatrixRanking = Object.assign( MatrixRanking, {
 $(document).ready(function() {
     //MatrixRanking Object contains all code for transforming matrix ranking UI
     MatrixRanking.init();
+
+
 });

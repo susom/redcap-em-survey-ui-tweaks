@@ -299,6 +299,13 @@ class SurveyUITweaks extends \ExternalModules\AbstractExternalModule
                 position:absolute;
                 z-index:0;
             }
+            .draggable li.branch_hidden{
+                display:none;
+                border:1px solid red; 
+            }
+            .show_overide {
+                display:table-row !important;
+            }
         </style>
         <script>
             var MatrixRanking       = MatrixRanking || {};
