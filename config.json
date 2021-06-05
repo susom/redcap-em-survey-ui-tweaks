@@ -11,8 +11,7 @@
 			"0.2": "Added global function",
 			"1.0.0": "initial repo release",
 			"1.0.1": "changed class so as not to have array constants",
-			"1.1.5": "fixed matrix ranking bug",
-			"1.2.0": "added @SURVEY-DURATION action tag for survey duration"
+			"1.1.5": "fixed matrix ranking bug"
 		}
 	],
 
