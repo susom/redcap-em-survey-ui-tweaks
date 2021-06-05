@@ -145,6 +145,13 @@ class SurveyUITweaks extends \ExternalModules\AbstractExternalModule
             $duration_fields[] = $setting['duration_field'];
         }
 
+        $metadata = REDCap::getDataDictionary('array',false,null,$instrument,false);
+        foreach ($metadata as $field_name=>$field_attributes) {
+            if (!in_array($field_name, $duration_fields) && preg_match('/@SURVEY-?DURATION(?=\s|$)/', $field_attributes['field_annotation'])) {
+                $duration_fields[] = $field_name;
+            }
+        }
+
         // Dont do anything if we don't have any duration fields specified
         if (empty($duration_fields)) return false;
 

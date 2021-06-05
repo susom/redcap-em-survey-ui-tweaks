@@ -30,4 +30,6 @@ This module provides end users with the ability to apply certain survey tweaks e
  the initial data entry.  To use, have a non-login survey where they enter their 'code'.  Set this survey as the
   EM option.  Then, when it is saved, it will automatically make the cookies as though the user just logged in.
 
+1. **Survey Duration Fields:** Designate text fields for capture of the cumulative duration that a survey respondent spends on the survey page where the field is located. Fields can be designated either via the project module configuration dialog or by specifing the action tag @SURVEY-DURATION in Field Annotations.
+
 What's next?  Up to you.  Post an issue as a request on the github site or fork and make a pull request on your own.
