@@ -15,7 +15,7 @@
 		}
 	],
 
-	"framework-version": 2,
+	"framework-version": 5,
   "compatibility": {
     "redcap-version-min": "8.11.6",
     "redcap-version-max": ""
@@ -50,7 +50,8 @@
   "permissions": [
     "redcap_survey_page_top",
     "redcap_survey_complete",
-    "redcap_every_page_top"
+    "redcap_every_page_top",
+	"redcap_every_page_before_render"
   ],
   "enable-every-page-hooks-on-system-pages": false,
   "links": {
@@ -79,86 +80,100 @@
 			"key": "global_remove_excess_td",
 			"name": "Remove the extra space on the left of questions <b> for all Surveys </b> (survey must be set to 'Custom numbered')",
 			"required": false,
-			"type": "checkbox"
+			"type": "checkbox",
+            "enable-survey-settings-ui": true
 		},
 		{
 			"key": "global_autoscroll",
 			"name": "Enable autoscroll <b> for all surveys </b>",
 			"required": false,
-			"type": "checkbox"
-		},
+			"type": "checkbox",
+            "enable-survey-settings-ui": true
+        },
 		{
 			"key": "global_hide_queue_corner",
 			"name": "Hide the queue button in the upper right corner <strong> for all surveys</strong>",
 			"required": false,
-			"type": "checkbox"
-		},
+			"type": "checkbox",
+            "enable-survey-settings-ui": true
+        },
 		{
 			"key": "global_hide_queue_end",
 			"name": "Hide the queue list at the end of the survey <strong> for all surveys </strong>",
 			"required": false,
-			"type": "checkbox"
-		},
+			"type": "checkbox",
+            "enable-survey-settings-ui": true
+        },
 		{
 			"key": "global_hide_font_resize",
 			"name": "Hide the font resize option <strong> for all surveys</strong>",
 			"required": false,
-			"type": "checkbox"
-		},
+			"type": "checkbox",
+            "enable-survey-settings-ui": true
+        },
 		{
 			"key": "global_hide_reset_button",
 			"name": "Hide reset button for radio buttons, yes no, and true / false fields <strong> for all surveys </strong>",
 			"required": false,
-			"type": "checkbox"
-		},
+			"type": "checkbox",
+            "enable-survey-settings-ui": true
+        },
 		{
 			"key": "global_rename_next_button",
 			"name": "Rename the \"Next Page >>\" text when continuing through multiple pages in a survey",
 			"required": false,
-			"type": "text"
-		},
+			"type": "text",
+            "enable-survey-settings-ui": true
+        },
 		{
 			"key": "global_rename_previous_button",
 			"name": "Rename the \"<< Previous Page\" text when continuing through multiple pages in a survey",
 			"required": false,
-			"type": "text"
-		},
+			"type": "text",
+            "enable-survey-settings-ui": true
+        },
 		{
 			"key": "global_hide_required_text",
 			"name": "Replace <font color = \"red\"><i> * must provide value </i></font> text with <font color = \"red\"><i> *</i></font> ",
 			"required": false,
-			"type": "checkbox"
-		},
+			"type": "checkbox",
+            "enable-survey-settings-ui": true
+        },
 		{
 			"key": "global_resize_survey",
 			"name": "Change the percent of the screen your survey takes up (e.g. 95)",
 			"required": false,
-			"type": "text"
-		},
+			"type": "text",
+            "enable-survey-settings-ui": true
+        },
 		{
 			"key": "global_save_and_return_without_email",
 			"name": "Remove the email option from \"Save and Return Later\", users must have return link and code",
 			"required": false,
-			"type": "checkbox"
-		},
+			"type": "checkbox",
+            "enable-survey-settings-ui": true
+        },
 		{
 			"key": "global_social_share",
 			"name": "Add Share (survey link) on Social Media Icons",
 			"required": false,
-			"type": "checkbox"
-		},
+			"type": "checkbox",
+            "enable-survey-settings-ui": true
+        },
 		{
 			"key": "global_social_share_title",
 			"name": "Custom Social Media Share title (if applicable):",
 			"required": false,
-			"type": "text"
-		},
+			"type": "text",
+            "enable-survey-settings-ui": true
+        },
 		{
 			"key": "global_responsive_td_fix",
 			"name": "Custom fix for responsive Table TDs in small view (TODO need figure better way to do this, but this is time sensitive so putting here for now) ",
 			"required": false,
-			"type": "checkbox"
-		},
+			"type": "checkbox",
+            "enable-survey-settings-ui": true
+        },
 
 		{
 			"key": "survey_instructions",
@@ -183,7 +198,8 @@
 					"name": "Remove the extra space on the left of questions (survey must be set to 'Custom numbered')",
 					"required": false,
 					"type": "checkbox",
-					"branchingLogic":
+                    "enable-survey-settings-ui": true,
+                    "branchingLogic":
 						{
 							"conditions":
 							[
@@ -199,7 +215,8 @@
 					"name": "Enable autoscroll for this survey",
 					"required": false,
 					"type": "checkbox",
-					"branchingLogic":
+                    "enable-survey-settings-ui": true,
+                    "branchingLogic":
 						{
 							"conditions":
 							[
@@ -215,6 +232,7 @@
 					"name": "Hide the queue button in upper right corner",
 					"required": false,
 					"type": "checkbox",
+                    "enable-survey-settings-ui": true,
 					"branchingLogic":
 						{
 							"conditions":
@@ -231,6 +249,7 @@
 					"name": "Hide the queue list at the end of the survey",
 					"required": false,
 					"type": "checkbox",
+                    "enable-survey-settings-ui": true,
 					"branchingLogic":
 						{
 							"conditions":
@@ -246,25 +265,29 @@
 					"key": "survey_login_on_save",
 					"name": "Select a survey below if you want auto-survey-login to occur when this is saved.  This is useful for cases where you do not want to enforce survey login on the initial submission of data.",
 					"required": false,
-					"type": "checkbox"
-				},
+					"type": "checkbox",
+                    "enable-survey-settings-ui": true
+                },
 				{
 					"key": "rename_submit_button",
 					"name": "Rename submit button. <br>Enter the new label for the submit button, e.g. <u>Next Page >></u>",
 					"required": false,
-					"type": "text"
-				},
+					"type": "text",
+                    "enable-survey-settings-ui": true
+                },
 				{
 					"key": "hide_submit_button",
 					"name": "Hide submit button<br>This will prevent survey submission - useful for informational surveys",
 					"required": false,
-					"type": "checkbox"
-				},
+					"type": "checkbox",
+                    "enable-survey-settings-ui": true
+                },
 				{
 					"key": "hide_reset_button",
 					"name": "Hide reset button for radio buttons, yes no, and true / false fields",
 					"required": false,
 					"type": "checkbox",
+                    "enable-survey-settings-ui": true,
 					"branchingLogic":
 						{
 							"conditions":

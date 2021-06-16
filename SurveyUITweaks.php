@@ -19,11 +19,21 @@ class SurveyUITweaks extends \ExternalModules\AbstractExternalModule
     use emLoggerTrait;
 
     public $settings;   // Per survey subsettings
+
+    public $instances;
+
+    public $global_ui_settings;
+    public $instance_ui_settings;
+
     public $title;
 
     public $record;
 
     public $context;    // Args from calling hook function
+
+    const TAG_PREFIX = "survey_ui_tweaks_";
+    const CONFIG_UI_ATTR = "enable-survey-settings-ui";
+
 
     function __construct()
     {
@@ -36,20 +46,59 @@ class SurveyUITweaks extends \ExternalModules\AbstractExternalModule
         }
     }
 
-    function loadInstances() {
-        if ($this->getProjectId() && empty($this->settings)) {
-            // Load the project settings
-            $this->settings = $this->framework->getSubSettings('survey_tweaks');
+    function loadSettings() {
+        // Load all project settings
+        if (empty($this->settings) && $this->getProjectId()) {
+            $this->settings = $this->getProjectSettings();
+            $this->instances = $this->getSubSettings('survey_tweaks');
         }
         // $this->emDebug($this->settings);
     }
 
-    ## THESE ARE TWEAKS FOR SURVEY_PAGE_TOP
+    // Build two arrays for global and per-survey tweaks that are enabled for UI editing in survey settings
+    function loadSettingsUITweaks()
+    {
+        // Get the EM config:
+        $config = $this->getConfig();
+
+        // Array of global configuration settings where key is global setting name
+        $global_ui_settings = [];
+
+        // Build array for survey_tweak subsettings where key is setting name
+        $instance_ui_settings = [];
+
+        // Get the survey tweaks sub-settings
+        $survey_tweaks = false;
+        foreach ($config['project-settings'] as $project_setting) {
+            $key = $project_setting['key'];
+
+            if ($key == 'survey_tweaks') {
+                foreach ($project_setting['sub_settings'] as $instance_setting) {
+                    // Skip those instance settings that are missing the config.js attribute
+                    if (!isset($instance_setting[self::CONFIG_UI_ATTR])) continue;
+
+                    $key = $instance_setting['key'];
+                    $instance_ui_settings[$key] = $instance_setting;
+                }
+            } else {
+                // This is not the 'special survey ui tweaks' repeating section
+                // Skip those instance settings that are missing the config.js attribute
+                if (!isset($project_setting[self::CONFIG_UI_ATTR])) continue;
+                $global_ui_settings[$key] = $project_setting;
+            }
+        }
+
+        $this->global_ui_settings = $global_ui_settings;
+        $this->instance_ui_settings = $instance_ui_settings;
+    }
+
+
+    # THESE ARE TWEAKS FOR SURVEY_PAGE_TOP
     function redcap_survey_page_top($project_id, $record, $instrument, $event_id, $group_id, $survey_hash, $response_id, $repeat_instance)
     {
-        $this->loadInstances();
-        $this->title = $instrument;
+        $this->loadSettings();
 
+        $this->title = $instrument;
         $survey_page_top_tweaks = array(
             'remove_excess_td'              => 'removeExcessTd',
             'autoscroll'                    => 'autoscroll',
@@ -71,16 +120,23 @@ class SurveyUITweaks extends \ExternalModules\AbstractExternalModule
         }
 
         $this->checkSurveyDuration($instrument);
+
         $this->checkMatrixRank($instrument);
+
         // TODO put recommendation to fix this as part of REDCap pull request.  for now put it in here
         echo "<style>#survey_logo { width:100% !important; height:auto !important; }</style>";
     }
 
+
     # TWEAKS FOR EVERY_PAGE_TOP
     function redcap_every_page_top($project_id)
     {
-        $this->loadInstances();
+        $this->loadSettings();
 
+        // When editing the survey settings, inject UI configuration for survey settings
+        $this->renderSurveySettings();
+
+        // These tweaks do not use the standard survey hooks - so, as a work-around, we use the every_page_top hook
         $every_page_top_tweaks = array();
 
         // Handle save and return page which doesn't fit under survey_page_top or survey_complete
@@ -94,11 +150,19 @@ class SurveyUITweaks extends \ExternalModules\AbstractExternalModule
         }
     }
 
+    # HANDLE SAVE OF SURVEY SETTINGS
+	function redcap_every_page_before_render($project_id = null)
+	{
+        // When the survey settings page is saved, we want to pull out the surveyui-tweak params and save them separately
+		// Note: that we must use the before_render hook here because the POST handling occurs before the every_page_top is called
+		$this->updateSurveySettings();
+	}
 
-    ## THESE ARE TWEAKS FOR SURVEY_COMPLETE
+
+	# THESE ARE TWEAKS FOR SURVEY_COMPLETE
     function redcap_survey_complete($project_id, $record, $instrument, $event_id, $group_id, $survey_hash, $response_id, $repeat_instance)
     {
-        $this->loadInstances();
+        $this->loadSettings();
 
         $this->title = $instrument;
         $this->record = $record;
@@ -113,6 +177,245 @@ class SurveyUITweaks extends \ExternalModules\AbstractExternalModule
             $this->checkFeature($key, $func, $instrument);
         }
     }
+
+
+
+
+	/**
+	 * When editing or creating survey settings, we need to insert into the form the option for enabling webauth
+	 */
+	function renderSurveySettings()
+	{
+		if (PAGE == "Surveys/edit_info.php" || PAGE == "Surveys/create_survey.php") {
+			$survey_name = $_GET['page'];
+
+			//$this->emDebug(__FUNCTION__, $this->settings);
+
+            // Get per-survey settings
+            $survey_settings = false;
+            foreach ($this->instances as $i => $instance) {
+                if ($instance['survey_name'] == $survey_name) {
+                    $survey_settings = $instance;
+                    break;
+                }
+            }
+
+            // Pre-populate the config setting arrays that we include in the survey settings
+            $this->loadSettingsUITweaks();
+
+            //
+            // // Get the EM config:
+            // $config = $this->getConfig();
+            //
+            // // Build array with project settings
+            // $project_settings = [];
+            //
+            // // Array of global configuration settings where key is global setting name
+            // $global_settings = [];
+            //
+            // // Build array for survey_tweak subsettings where key is setting name
+            // $instance_settings = [];
+            //
+            // // Get the survey tweaks sub-settings
+            // $survey_tweaks = false;
+            // foreach ($config['project-settings'] as $project_setting) {
+            //     $key = $project_setting['key'];
+            //     if ($key == 'survey_tweaks') {
+            //         foreach ($project_settings['survey_tweaks']['sub_settings'] as $instance_setting) {
+            //             if (!isset($instance_setting[self::CONFIG_UI_ATTR])) continue;
+            //             $key = $instance_setting['key'];
+            //             $instance_settings[$key] = $instance_setting;
+            //         }
+            //     } else {
+            //         if (!isset($config[self::CONFIG_UI_ATTR])) continue;
+            //
+            //     }
+            //
+            //
+            //     $project_settings[$key] = $project_setting;
+            //     if (strpos($key, "global_") === 0) {
+            //         $global_settings[$key] = $project_setting;
+            //     }
+            // }
+            // //$this->emDebug($project_settings);
+
+
+            // Render GLOBAL Settings:
+            ?>
+            <div id='survey_ui_global_tweaks_holder' style="display:none;">
+                <table>
+            <?php
+            foreach ($this->global_ui_settings as $key => $tweak) {
+                $value = $this->settings[$key];
+                $instance_input = str_replace($key, "global_", "");
+                $this->renderInput($tweak, $value, $instance_input);
+            }
+            ?>
+                </table>
+            </div>
+            <?php
+            $this->renderJsMover("Global Survey UI Tweak Settings", "survey_ui_global_tweaks_holder");
+
+
+            // Render per-form settings
+            ?>
+            <div id='survey_ui_tweaks_holder' style="display:none;">
+                <table>
+            <?php
+            foreach ($this->instance_ui_settings as $key => $tweak) {
+                $value = $survey_settings[$key];
+                $this->renderInput($tweak, $value);
+            }
+            ?>
+                </table>
+            </div>
+            <?php
+            $this->renderJsMover("Survey UI Tweaks for This Survey Only", "survey_ui_tweaks_holder");
+		}
+	}
+
+    //survey_ui_tweaks_holder
+	function renderJsMover($header, $table_id) {
+        ?>
+           <script>
+                $(document).ready(function () {
+                    let sa = $("div.header:contains('Survey Access:')").parent().parent();
+                    console.log("SA", sa);
+                    let ui = $('<tr><td colspan="3"><div class="header" style="padding:7px 10px 5px;margin:0 -7px 10px;">' +
+                        '<?php echo $header ?>:</div></td></tr>');
+                    console.log("UI", ui);
+                    ui.insertBefore(sa);
+                    let last = ui;
+                    $('tr', '#<?php echo $table_id ?>').each(function(i,e){
+                        console.log(i,e);
+                        $(e).insertAfter(last);
+                        last = $(e);
+                    });
+                });
+            </script>
+        <?php
+	}
+
+    function renderInput($tweak, $value, $instance_data = null) {
+        $key = $tweak['key'];
+	    $tag_name = self::TAG_PREFIX . $key;
+	    $type = $tweak['type'];
+
+	    $input = "";
+	    switch ($type) {
+	        case "checkbox":
+	            $input = "<label for='$tag_name'>Enable: </label><input type='checkbox' data-instance='$instance_data' name='$tag_name'" . ($value ? 'checked' : '') . ">";
+	            break;
+            case "text":
+                $input = "<input type='text' data-instance='$instance_data' name='$tag_name' value='$value' />";
+                break;
+            default:
+                //$this->emDebug("Invalid type: $type", $tweak);
+	    }
+        if (!empty($input)) {
+            $tr = [];
+            $tr[] = "<tr id='$tag_name-tr'>";
+            $tr[] = "<td valign='top' style='width:20px;'><i class='fa fa-search-plus' /></td>";
+            $tr[] = "<td valign='top' style='width:290px;padding-bottom:15px;'>";
+            $tr[] = $tweak['name'];
+            $tr[] = "</td>";
+            $tr[] = "<td valign='top' style='padding:0 0 10px 15px;'>";
+            $tr[] = $input;
+            $tr[] = "</td>";
+            $tr[] = "</tr>";
+            echo implode("\n", $tr);
+        }
+    }
+
+	/**
+	 * When a survey settings are saved, update the external module based on the form settings
+	 */
+	function updateSurveySettings()
+	{
+		if ((PAGE == "Surveys/edit_info.php" || PAGE == "Surveys/create_survey.php") && $_SERVER['REQUEST_METHOD'] == 'POST') {
+            $survey_name = $_GET['page'];
+
+            // Build a sub-array of the post for those settings that are survey_ui-related
+            $tweaks = [];
+            foreach ($_POST as $k => $v) {
+                if (strpos($k, self::TAG_PREFIX) === 0) {
+                    unset($_POST[$k]);
+                    $tweaks[str_replace(self::TAG_PREFIX, "", $k)] = $v;
+                }
+            }
+
+            // Get Index of Current Page
+            $this->loadSettings();
+            $instance_index = null;
+            foreach ($this->instances as $i => $instance) {
+                if ($instance['survey_name'] == $survey_name) {
+                    $instance_index = $i;
+                    break;
+                }
+            }
+
+            // Prepopulate the config setting arrays that we include in the survey settings
+            $this->loadSettingsUITweaks();
+
+            // Loop through the settings:
+            foreach (array_keys($this->global_ui_settings) as $k) {
+                $currentValue = $this->settings[$k];
+
+                // Get the post value for this key if it exists
+                if (isset($tweaks[$k])) {
+                    $saveValue = $tweaks[$k] == "on" ? true : $tweaks[$k];
+                } else {
+                    $saveValue = null;
+                }
+
+                if (!empty($currentValue) && empty($saveValue)) {
+                    // Was a value unchceked or cleared?
+                    $this->emDebug("$currentValue was cleared");
+                    $this->settings[$k] = null;
+                } elseif (!empty($saveValue)) {
+                    // Was the value changed or set
+                    if ($saveValue !== $currentValue) {
+                        $this->emDebug("$k was updated from", $currentValue, $saveValue);
+                        $this->settings[$k] = $saveValue;
+                    }
+                }
+            }
+
+            foreach (array_keys($this->instance_ui_settings) as $k) {
+                // Get the post value for this key if it exists
+                if (isset($tweaks[$k])) {
+                    $saveValue = $tweaks[$k] == "on" ? true : $tweaks[$k];
+                } else {
+                    $saveValue = null;
+                }
+
+                // Skip if instance isn't here
+                if (!isset($this->settings[$k][$instance_index])) continue;
+
+                // Was a value unchecked or cleared?
+                $currentValue = $this->settings[$k][$instance_index];
+                if (!empty($currentValue) && empty($saveValue)) {
+                    $this->emDebug("$k for $survey_name was cleared from $currentValue to nothing");
+                    $this->settings[$k][$instance_index] = null;
+                } elseif (!empty($saveValue)) {
+                    // Was the value changed or set
+                    if ($saveValue !== $currentValue) {
+                        $this->emDebug("$k for $survey_name was updated from $currentValue to $saveValue");
+                        $this->settings[$k][$instance_index] = $saveValue;
+                    }
+                }
+            }
+
+            // Parse out parameters from POST
+			// $this->emDebug($survey_name,$tweaks);
+			$this->emDebug($this->settings);
+            $this->setProjectSettings($this->settings);
+
+		}
+	}
+
+
+
 
 
     ## ACTUAL TWEAK FUNCTIONS - ADD MORE TO YOUR HEART'S CONTENT!
@@ -308,7 +611,7 @@ class SurveyUITweaks extends \ExternalModules\AbstractExternalModule
             }
             .draggable li.branch_hidden{
                 display:none;
-                border:1px solid red; 
+                border:1px solid red;
             }
             .show_overide {
                 display:table-row !important;
@@ -657,32 +960,38 @@ class SurveyUITweaks extends \ExternalModules\AbstractExternalModule
     function checkFeature($keyName, $funcName, $instrument, $args = array())
     {
         $globalKey          = 'global_' . $keyName;
-        $projectSettings    = $this->getProjectSettings();
-        $keyFound           = array_key_exists($globalKey, $projectSettings);
 
-        $global_setting     = $this->getProjectSetting($globalKey);
+        $this->emDebug("Project Settings", $this->settings);
 
+        // See if global key exists
+        $keyFound           = array_key_exists($globalKey, $this->settings);
+        $global_setting     = $this->settings[$globalKey];
+
+        // If globally checked true, then evaluate
         if ($global_setting) {
+            // Globally enabled
             $this->emDebug("enabling global $funcName");
             call_user_func_array(array($this, $funcName), empty($args) ? array($global_setting) : $args);
-        } elseif (!empty($instrument)) {
-            foreach ($this->settings as $settings) {
-                if (array_key_exists($keyName, $settings)) $keyFound=true;
-                if ($settings['survey_name'] == $instrument && $settings[$keyName]) {
-                    $this->emDebug("enabling  $funcName on $instrument");
-                    call_user_func_array(array($this, $funcName), empty($args) ? array($settings[$keyName]) : $args);
+        } else {
+            // Not Global, check for instance-specific
+            if (!empty($instrument)) {
+                foreach ($this->instances as $instance) {
+                    if ($instance['survey_name'] == $instrument && !empty($instance[$keyName])) {
+                        $this->emDebug("enabling $funcName on $instrument with $keyName");
+                        call_user_func_array(array($this, $funcName), empty($args) ? array($instance[$keyName]) : $args);
+                    }
                 }
             }
         }
-        if (!$keyFound) $this->emError("Unable to find key $keyName in settings");
+        // if (!$keyFound) $this->emError("Unable to find key $keyName in settings");
     }
 
-    // TODO: Build function to determine which are enabled
-    function getEnabledTweaks() {
-        foreach($this::SURVEY_PAGE_TOP_TWEAKS as $key=>$func) {
-            if ($this->getProjectSetting('global_' . $key)) {
-            }
-        }
-    }
+    // // TODO: Build function to determine which are enabled
+    // function getEnabledTweaks() {
+    //     foreach($this::SURVEY_PAGE_TOP_TWEAKS as $key=>$func) {
+    //         if ($this->getProjectSetting('global_' . $key)) {
+    //         }
+    //     }
+    // }
 
 }
