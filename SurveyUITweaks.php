@@ -44,6 +44,27 @@ class SurveyUITweaks extends \ExternalModules\AbstractExternalModule
         // $this->emDebug($this->settings);
     }
 
+    ## THESE ARE TWEAKS FOR SURVEY BEFORE RENDER
+    function redcap_every_page_before_render()
+    {
+        if (PAGE != 'surveys/index.php') return;
+
+        global $instrument;
+        $this->emDebug($instrument);
+//        $this->emDebug(debug_print_backtrace());
+
+        $this->loadInstances();
+
+        $survey_render_tweaks = array(
+            'rename_next_button'            => 'renameNextButton2',
+            'rename_previous_button'        => 'renamePreviousButton2'
+        );
+
+        foreach($survey_render_tweaks as $key=>$func) {
+            $this->checkFeature($key, $func, $instrument);
+        }
+    }
+
     ## THESE ARE TWEAKS FOR SURVEY_PAGE_TOP
     function redcap_survey_page_top($project_id, $record, $instrument, $event_id, $group_id, $survey_hash, $response_id, $repeat_instance)
     {
@@ -113,6 +134,7 @@ class SurveyUITweaks extends \ExternalModules\AbstractExternalModule
             $this->checkFeature($key, $func, $instrument);
         }
     }
+
 
 
     ## ACTUAL TWEAK FUNCTIONS - ADD MORE TO YOUR HEART'S CONTENT!
@@ -500,6 +522,7 @@ class SurveyUITweaks extends \ExternalModules\AbstractExternalModule
         <?php
     }
 
+
     function renameSubmitButton($name)
     {
         global $lang;
@@ -524,9 +547,22 @@ class SurveyUITweaks extends \ExternalModules\AbstractExternalModule
         <?php
     }
 
+    // For versions above 12.0.0
+    function renameNextButton2($name) {
+        // Skip if less than 12.0.0
+        if (REDCap::versionCompare(REDCAP_VERSION, '12.0.0') < 0) return;
+
+        global $lang;
+        $lang['data_entry_536'] = $name;
+    }
+
+    // For versions less than 12.0.0
     function renameNextButton($name)
     {
+        // Skip if greater than 12.0.0
+        if (REDCap::versionCompare(REDCAP_VERSION, '12.0.0') >= 0) return;
         global $lang;
+
         ?>
         <style>
             tr.surveysubmit{
@@ -545,10 +581,24 @@ class SurveyUITweaks extends \ExternalModules\AbstractExternalModule
             });
         </script>
         <?php
+
     }
 
+    //For versions above 12.0.0
+    function renamePreviousButton2($name) {
+        // Skip if less than 12.0.0
+        if (REDCap::versionCompare(REDCAP_VERSION, '12.0.0') < 0) return;
+
+        global $lang;
+        $lang['data_entry_537'] = $name;
+    }
+
+    // For versions less than 12.0.0
     function renamePreviousButton($name)
     {
+        // Skip if greater than 12.0.0
+        if (REDCap::versionCompare(REDCAP_VERSION, '12.0.0') >= 0) return;
+
         global $lang;
         ?>
         <style>
