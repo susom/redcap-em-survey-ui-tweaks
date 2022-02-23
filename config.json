@@ -15,9 +15,9 @@
 		}
 	],
 
-	"framework-version": 2,
+	"framework-version": 7,
   "compatibility": {
-    "redcap-version-min": "8.11.6",
+    "redcap-version-min": "10.8.2",
     "redcap-version-max": ""
   },
   "authors": [

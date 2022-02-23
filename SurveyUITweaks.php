@@ -39,7 +39,7 @@ class SurveyUITweaks extends \ExternalModules\AbstractExternalModule
     function loadInstances() {
         if ($this->getProjectId() && empty($this->settings)) {
             // Load the project settings
-            $this->settings = $this->framework->getSubSettings('survey_tweaks');
+            $this->settings = $this->getSubSettings('survey_tweaks');
         }
         // $this->emDebug($this->settings);
     }
@@ -47,11 +47,13 @@ class SurveyUITweaks extends \ExternalModules\AbstractExternalModule
     ## THESE ARE TWEAKS FOR SURVEY BEFORE RENDER
     function redcap_every_page_before_render()
     {
+        // Only call if on a survey page
         if (PAGE != 'surveys/index.php') return;
 
         global $instrument;
-        $this->emDebug($instrument);
-//        $this->emDebug(debug_print_backtrace());
+
+        // Only on an actual survey
+        if (empty($instrument)) return;
 
         $this->loadInstances();
 
@@ -547,7 +549,7 @@ class SurveyUITweaks extends \ExternalModules\AbstractExternalModule
         <?php
     }
 
-    // For versions above 12.0.0
+    // For versions above 12.0.0 this function is called from the every_page_before_render hook
     function renameNextButton2($name) {
         // Skip if less than 12.0.0
         if (REDCap::versionCompare(REDCAP_VERSION, '12.0.0') < 0) return;
@@ -556,7 +558,7 @@ class SurveyUITweaks extends \ExternalModules\AbstractExternalModule
         $lang['data_entry_536'] = $name;
     }
 
-    // For versions less than 12.0.0
+    // For versions less than 12.0.0 this function is called from the survey_page_top hook
     function renameNextButton($name)
     {
         // Skip if greater than 12.0.0
