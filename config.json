@@ -1,345 +1,328 @@
 {
-	"name": "Survey UI Tweaks",
-
-	"namespace":"Stanford\\SurveyUITweaks",
-
-	"description": "Various survey ui tweaks - such as hiding survey queue button in top right and the queue at the end of the survey.",
-
-	"versions": [
-		{
-			"0.1": "Initial Development Version",
-			"0.2": "Added global function",
-			"1.0.0": "initial repo release",
-			"1.0.1": "changed class so as not to have array constants",
-			"1.1.5": "fixed matrix ranking bug"
-		}
-	],
-
-	"framework-version": 7,
-  "compatibility": {
-    "redcap-version-min": "10.8.2",
-    "redcap-version-max": ""
-  },
-  "authors": [
-    {
-      "name": "Andy Martin",
-      "email": "andy123@stanford.edu",
-      "institution": "Stanford University"
+    "name": "Survey UI Tweaks",
+    "namespace": "Stanford\\SurveyUITweaks",
+    "description": "A collection of UI and quality of life enhancements to make surveys more aesthetically pleasing and user friendly",
+    "framework-version": 7,
+    "compatibility": {
+        "redcap-version-min": "10.8.2",
+        "redcap-version-max": ""
     },
-    {
-      "name": "YongJae Lee",
-      "email": "jael@stanford.edu",
-      "institution": "Stanford University"
+    "authors": [
+        {
+            "name": "Andy Martin",
+            "email": "andy123@stanford.edu",
+            "institution": "Stanford University"
+        },
+        {
+            "name": "YongJae Lee",
+            "email": "jael@stanford.edu",
+            "institution": "Stanford University"
+        },
+        {
+            "name": "Ryan Valentine",
+            "email": "rval@stanford.edu",
+            "institution": "Stanford University"
+        },
+        {
+            "name": "Irvin Szeto",
+            "email": "irvins@stanford.edu",
+            "institution": "Stanford University"
+        },
+        {
+            "name": "Ihab Zeedia",
+            "email": "ihabz@stanford.edu",
+            "institution": "Stanford University"
+        }
+    ],
+    "permissions": [
+        "redcap_survey_page_top",
+        "redcap_survey_complete",
+        "redcap_every_page_top",
+        "redcap_every_page_before_render"
+    ],
+    "enable-every-page-hooks-on-system-pages": false,
+    "links": {
+        "control-center": [
+        ],
+        "project": [
+        ]
     },
-    {
-      "name": "Ryan Valentine",
-      "email": "rval@stanford.edu",
-      "institution": "Stanford University"
-    },
-    {
-      "name": "Irvin Szeto",
-      "email": "irvins@stanford.edu",
-      "institution": "Stanford University"
-    },
-    {
-      "name": "Ihab Zeedia",
-      "email": "ihabz@stanford.edu",
-      "institution": "Stanford University"
-    }
-  ],
-  "permissions": [
-    "redcap_survey_page_top",
-    "redcap_survey_complete",
-    "redcap_every_page_top",
-	  "redcap_every_page_before_render"
-  ],
-  "enable-every-page-hooks-on-system-pages": false,
-  "links": {
-		"control-center": [
-		],
-		"project": [
-		]
-	},
-
-	"system-settings": [
-		{
-			"key": "enable-system-debug-logging",
-			"name": "<b>Enable Debug Logging (system-wide)</b> <i>(Requires emLogger)</i>",
-			"required": false,
-			"type": "checkbox"
-		}
-	],
-
-	"project-settings": [
-		{
-			"key": "global_instructions",
-			"name": "<h5 class='text-center'><span class='text-lg badge badge-lg badge-success'>Global Tweaks</span></h5>The following set of tweaks will apply to all surveys in the project.  If configured here, the option will not appear in the per-survey section.",
-			"type": "descriptive"
-		},
-		{
-			"key": "global_remove_excess_td",
-			"name": "Remove the extra space on the left of questions <b> for all Surveys </b> (survey must be set to 'Custom numbered')",
-			"required": false,
-			"type": "checkbox"
-		},
-		{
-			"key": "global_autoscroll",
-			"name": "Enable autoscroll <b> for all surveys </b>",
-			"required": false,
-			"type": "checkbox"
-		},
-		{
-			"key": "global_hide_queue_corner",
-			"name": "Hide the queue button in the upper right corner <strong> for all surveys</strong>",
-			"required": false,
-			"type": "checkbox"
-		},
-		{
-			"key": "global_hide_queue_end",
-			"name": "Hide the queue list at the end of the survey <strong> for all surveys </strong>",
-			"required": false,
-			"type": "checkbox"
-		},
-		{
-			"key": "global_hide_font_resize",
-			"name": "Hide the font resize option <strong> for all surveys</strong>",
-			"required": false,
-			"type": "checkbox"
-		},
-		{
-			"key": "global_hide_reset_button",
-			"name": "Hide reset button for radio buttons, yes no, and true / false fields <strong> for all surveys </strong>",
-			"required": false,
-			"type": "checkbox"
-		},
-		{
-			"key": "global_rename_next_button",
-			"name": "Rename the \"Next Page >>\" text when continuing through multiple pages in a survey",
-			"required": false,
-			"type": "text"
-		},
-		{
-			"key": "global_rename_previous_button",
-			"name": "Rename the \"<< Previous Page\" text when continuing through multiple pages in a survey",
-			"required": false,
-			"type": "text"
-		},
-		{
-			"key": "global_hide_required_text",
-			"name": "Replace <font color = \"red\"><i> * must provide value </i></font> text with <font color = \"red\"><i> *</i></font> ",
-			"required": false,
-			"type": "checkbox"
-		},
-		{
-			"key": "global_resize_survey",
-			"name": "Change the percent of the screen your survey takes up (e.g. 95)",
-			"required": false,
-			"type": "text"
-		},
-		{
-			"key": "global_save_and_return_without_email",
-			"name": "Remove the email option from \"Save and Return Later\", users must have return link and code",
-			"required": false,
-			"type": "checkbox"
-		},
-		{
-			"key": "global_social_share",
-			"name": "Add Share (survey link) on Social Media Icons",
-			"required": false,
-			"type": "checkbox"
-		},
-		{
-			"key": "global_social_share_title",
-			"name": "Custom Social Media Share title (if applicable):",
-			"required": false,
-			"type": "text"
-		},
-		{
-			"key": "global_responsive_td_fix",
-			"name": "Custom fix for responsive Table TDs in small view (TODO need figure better way to do this, but this is time sensitive so putting here for now) ",
-			"required": false,
-			"type": "checkbox"
-		},
-
-		{
-			"key": "survey_instructions",
-			"name": "<h5 class='text-center'><span class='text-lg badge badge-lg badge-success'>Survey-specific Tweaks</span></h5>This section allows you to specify a tweak only on a particular survey.  Start by selecting the survey and then indicate which tweaks you wish to apply.",
-			"type": "descriptive"
-		},
-		{
-			"key": "survey_tweaks",
-			"name": "Per-Survey Customizations",
-			"required": false,
-			"type": "sub_settings",
-			"repeatable": true,
-			"sub_settings": [
-				{
-					"key": "survey_name",
-					"name": "<b>Survey Name</b><br>Select which survey you want to selectively apply the following tweaks to:",
-					"required": false,
-					"type": "form-list"
-				},
-				{
-					"key": "remove_excess_td",
-					"name": "Remove the extra space on the left of questions (survey must be set to 'Custom numbered')",
-					"required": false,
-					"type": "checkbox",
-					"branchingLogic":
-						{
-							"conditions":
-							[
-								{
-									"field": "global_remove_excess_td",
-									"value": false
-								}
-							]
-						}
-				},
-				{
-					"key": "autoscroll",
-					"name": "Enable autoscroll for this survey",
-					"required": false,
-					"type": "checkbox",
-					"branchingLogic":
-						{
-							"conditions":
-							[
-								{
-									"field": "global_autoscroll",
-									"value": false
-								}
-							]
-						}
-				},
-				{
-					"key": "hide_queue_corner",
-					"name": "Hide the queue button in upper right corner",
-					"required": false,
-					"type": "checkbox",
-					"branchingLogic":
-						{
-							"conditions":
-							[
-								{
-									"field": "global_hide_queue_corner",
-									"value": false
-								}
-							]
-						}
-				},
-				{
-					"key": "hide_queue_end",
-					"name": "Hide the queue list at the end of the survey",
-					"required": false,
-					"type": "checkbox",
-					"branchingLogic":
-						{
-							"conditions":
-							[
-								{
-									"field": "global_hide_queue_end",
-									"value": false
-								}
-							]
-						}
-				},
-				{
-					"key": "survey_login_on_save",
-					"name": "Select a survey below if you want auto-survey-login to occur when this is saved.  This is useful for cases where you do not want to enforce survey login on the initial submission of data.",
-					"required": false,
-					"type": "checkbox"
-				},
-				{
-					"key": "rename_submit_button",
-					"name": "Rename submit button. <br>Enter the new label for the submit button, e.g. <u>Next Page >></u>",
-					"required": false,
-					"type": "text"
-				},
-				{
-					"key": "hide_submit_button",
-					"name": "Hide submit button<br>This will prevent survey submission - useful for informational surveys",
-					"required": false,
-					"type": "checkbox"
-				},
-				{
-					"key": "hide_reset_button",
-					"name": "Hide reset button for radio buttons, yes no, and true / false fields",
-					"required": false,
-					"type": "checkbox",
-					"branchingLogic":
-						{
-							"conditions":
-							[
-								{
-									"field": "global_hide_reset_button",
-									"value": false
-								}
-							]
-						}
-
-				}
-			]
-		},
-		{
-			"key": "sortrank",
-			"name": "Enhanced Drag and Drop Matrix Ranking",
-			"required": false,
-			"type": "sub_settings",
-			"repeatable": true,
-			"sub_settings": [
-				{
-					"key": "matrix_name",
-					"name": "<b>Matrix Group Name</b><br>Select which matrix you want to selectively apply the following tweaks to",
-					"required": false,
-					"type": "text"
-				},
-				{
-					"key": "show_rank_label",
-					"name": "<b>Show Rank Order labels</b> in the drag list item",
-					"required": false,
-					"type": "checkbox"
-				},
-				{
-					"key": "randomize_options",
-					"name": "<b>Randomize Order of Choices</b> to decrease bias",
-					"required": false,
-					"type": "checkbox"
-				},
-				{
-					"key": "matrix_instructions",
-					"name": "<b>Matrix Instructions</b> to show as text in draggable area",
-					"required": false,
-					"type": "notesbox"
-				}
-			]
-		},
-
-		{
-			"key": "survey_duration_desc",
-			"name": "<h5 class='text-center'><span class='text-lg badge badge-lg badge-success'>Measure Survey Duration In Seconds</span></h5>You can record the number of seconds a user spends on a survey page (or survey section).  You must add a text field to each page/section that you want to record.  The field will be automatically hidden on surveys.  If a survey user returns to a page, the duration will be added to the previous value.",
-			"type": "descriptive"
-		},
-		{
-			"key": "survey_duration_fields",
-			"name": "<b>Survey Duration Fields</b>",
-			"required": false,
-			"type": "sub_settings",
-			"repeatable": true,
-			"sub_settings": [
-				{
-					"key": "duration_field",
-					"name": "<b>Select Survey Field</b> (should be text)",
-					"required": false,
-					"type": "field-list"
-				}
-			]
-		},
-		{
-			"key": "enable-project-debug-logging",
-			"name": "<b>Enable Debug Logging</b> <i>(Requires emLogger)</i>",
-			"required": false,
-			"type": "checkbox"
-		}
-
-	]
+    "system-settings": [
+        {
+            "key": "enable-system-debug-logging",
+            "name": "<b>Enable Debug Logging (system-wide)</b> <i>(Requires emLogger)</i>",
+            "required": false,
+            "type": "checkbox"
+        }
+    ],
+    "project-settings": [
+        {
+            "key": "global_instructions",
+            "name": "<h5 class='text-center'><span class='text-lg badge badge-lg badge-success'>Global Tweaks</span></h5>The following set of tweaks will apply to all surveys in the project.  If configured here, the option will not appear in the per-survey section.",
+            "type": "descriptive"
+        },
+        {
+            "key": "global_remove_excess_td",
+            "name": "Remove the extra space on the left of questions <b> for all Surveys </b> (survey must be set to 'Custom numbered')",
+            "required": false,
+            "type": "checkbox"
+        },
+        {
+            "key": "global_autoscroll",
+            "name": "Enable autoscroll <b> for all surveys </b>",
+            "required": false,
+            "type": "checkbox"
+        },
+        {
+            "key": "global_hide_queue_corner",
+            "name": "Hide the queue button in the upper right corner <strong> for all surveys</strong>",
+            "required": false,
+            "type": "checkbox"
+        },
+        {
+            "key": "global_hide_queue_end",
+            "name": "Hide the queue list at the end of the survey <strong> for all surveys </strong>",
+            "required": false,
+            "type": "checkbox"
+        },
+        {
+            "key": "global_hide_font_resize",
+            "name": "Hide the font resize option <strong> for all surveys</strong>",
+            "required": false,
+            "type": "checkbox"
+        },
+        {
+            "key": "global_hide_reset_button",
+            "name": "Hide reset button for radio buttons, yes no, and true / false fields <strong> for all surveys </strong>",
+            "required": false,
+            "type": "checkbox"
+        },
+        {
+            "key": "global_rename_next_button",
+            "name": "Rename the \"Next Page >>\" text when continuing through multiple pages in a survey",
+            "required": false,
+            "type": "text"
+        },
+        {
+            "key": "global_rename_previous_button",
+            "name": "Rename the \"<< Previous Page\" text when continuing through multiple pages in a survey",
+            "required": false,
+            "type": "text"
+        },
+        {
+            "key": "global_hide_required_text",
+            "name": "Replace <font color = \"red\"><i> * must provide value </i></font> text with <font color = \"red\"><i> *</i></font> ",
+            "required": false,
+            "type": "checkbox"
+        },
+        {
+            "key": "global_resize_survey",
+            "name": "Change the percent of the screen your survey takes up (e.g. 95)",
+            "required": false,
+            "type": "text"
+        },
+        {
+            "key": "global_save_and_return_without_email",
+            "name": "Remove the email option from \"Save and Return Later\", users must have return link and code",
+            "required": false,
+            "type": "checkbox"
+        },
+        {
+            "key": "global_social_share",
+            "name": "Add Share (survey link) on Social Media Icons",
+            "required": false,
+            "type": "checkbox"
+        },
+        {
+            "key": "global_social_share_title",
+            "name": "Custom Social Media Share title (if applicable):",
+            "required": false,
+            "type": "text"
+        },
+        {
+            "key": "global_responsive_td_fix",
+            "name": "Custom fix for responsive Table TDs in small view (TODO need figure better way to do this, but this is time sensitive so putting here for now) ",
+            "required": false,
+            "type": "checkbox"
+        },
+        {
+            "key": "survey_instructions",
+            "name": "<h5 class='text-center'><span class='text-lg badge badge-lg badge-success'>Survey-specific Tweaks</span></h5>This section allows you to specify a tweak only on a particular survey.  Start by selecting the survey and then indicate which tweaks you wish to apply.",
+            "type": "descriptive"
+        },
+        {
+            "key": "survey_tweaks",
+            "name": "Per-Survey Customizations",
+            "required": false,
+            "type": "sub_settings",
+            "repeatable": true,
+            "sub_settings": [
+                {
+                    "key": "survey_name",
+                    "name": "<b>Survey Name</b><br>Select which survey you want to selectively apply the following tweaks to:",
+                    "required": false,
+                    "type": "form-list"
+                },
+                {
+                    "key": "remove_excess_td",
+                    "name": "Remove the extra space on the left of questions (survey must be set to 'Custom numbered')",
+                    "required": false,
+                    "type": "checkbox",
+                    "branchingLogic": {
+                        "conditions": [
+                            {
+                                "field": "global_remove_excess_td",
+                                "value": false
+                            }
+                        ]
+                    }
+                },
+                {
+                    "key": "autoscroll",
+                    "name": "Enable autoscroll for this survey",
+                    "required": false,
+                    "type": "checkbox",
+                    "branchingLogic": {
+                        "conditions": [
+                            {
+                                "field": "global_autoscroll",
+                                "value": false
+                            }
+                        ]
+                    }
+                },
+                {
+                    "key": "hide_queue_corner",
+                    "name": "Hide the queue button in upper right corner",
+                    "required": false,
+                    "type": "checkbox",
+                    "branchingLogic": {
+                        "conditions": [
+                            {
+                                "field": "global_hide_queue_corner",
+                                "value": false
+                            }
+                        ]
+                    }
+                },
+                {
+                    "key": "hide_queue_end",
+                    "name": "Hide the queue list at the end of the survey",
+                    "required": false,
+                    "type": "checkbox",
+                    "branchingLogic": {
+                        "conditions": [
+                            {
+                                "field": "global_hide_queue_end",
+                                "value": false
+                            }
+                        ]
+                    }
+                },
+                {
+                    "key": "survey_login_on_save",
+                    "name": "Select a survey below if you want auto-survey-login to occur when this is saved.  This is useful for cases where you do not want to enforce survey login on the initial submission of data.",
+                    "required": false,
+                    "type": "checkbox"
+                },
+                {
+                    "key": "rename_next_button",
+                    "name": "Rename the \"Next Page >>\" text when continuing through multiple pages in a survey",
+                    "required": false,
+                    "type": "text"
+                },
+                {
+                    "key": "rename_previous_button",
+                    "name": "Rename the \"<< Previous Page\" text when continuing through multiple pages in a survey",
+                    "required": false,
+                    "type": "text"
+                },
+                {
+                    "key": "rename_submit_button",
+                    "name": "Rename submit button. <br>Enter the new label for the submit button, e.g. <u>Next Page >></u>",
+                    "required": false,
+                    "type": "text"
+                },
+                {
+                    "key": "hide_submit_button",
+                    "name": "Hide submit button<br>This will prevent survey submission - useful for informational surveys",
+                    "required": false,
+                    "type": "checkbox"
+                },
+                {
+                    "key": "hide_reset_button",
+                    "name": "Hide reset button for radio buttons, yes no, and true / false fields",
+                    "required": false,
+                    "type": "checkbox",
+                    "branchingLogic": {
+                        "conditions": [
+                            {
+                                "field": "global_hide_reset_button",
+                                "value": false
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
+        {
+            "key": "sortrank",
+            "name": "Enhanced Drag and Drop Matrix Ranking",
+            "required": false,
+            "type": "sub_settings",
+            "repeatable": true,
+            "sub_settings": [
+                {
+                    "key": "matrix_name",
+                    "name": "<b>Matrix Group Name</b><br>Select which matrix you want to selectively apply the following tweaks to",
+                    "required": false,
+                    "type": "text"
+                },
+                {
+                    "key": "show_rank_label",
+                    "name": "<b>Show Rank Order labels</b> in the drag list item",
+                    "required": false,
+                    "type": "checkbox"
+                },
+                {
+                    "key": "randomize_options",
+                    "name": "<b>Randomize Order of Choices</b> to decrease bias",
+                    "required": false,
+                    "type": "checkbox"
+                },
+                {
+                    "key": "matrix_instructions",
+                    "name": "<b>Matrix Instructions</b> to show as text in draggable area",
+                    "required": false,
+                    "type": "notesbox"
+                }
+            ]
+        },
+        {
+            "key": "survey_duration_desc",
+            "name": "<h5 class='text-center'><span class='text-lg badge badge-lg badge-success'>Measure Survey Duration In Seconds</span></h5>You can record the number of seconds a user spends on a survey page (or survey section).  You must add a text field to each page/section that you want to record.  The field will be automatically hidden on surveys.  If a survey user returns to a page, the duration will be added to the previous value.",
+            "type": "descriptive"
+        },
+        {
+            "key": "survey_duration_fields",
+            "name": "<b>Survey Duration Fields</b>",
+            "required": false,
+            "type": "sub_settings",
+            "repeatable": true,
+            "sub_settings": [
+                {
+                    "key": "duration_field",
+                    "name": "<b>Select Survey Field</b> (should be text)",
+                    "required": false,
+                    "type": "field-list"
+                }
+            ]
+        },
+        {
+            "key": "enable-project-debug-logging",
+            "name": "<b>Enable Debug Logging</b> <i>(Requires emLogger)</i>",
+            "required": false,
+            "type": "checkbox"
+        }
+    ]
 }

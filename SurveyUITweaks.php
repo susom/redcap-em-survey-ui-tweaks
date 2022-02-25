@@ -50,10 +50,18 @@ class SurveyUITweaks extends \ExternalModules\AbstractExternalModule
         // Only call if on a survey page
         if (PAGE != 'surveys/index.php') return;
 
-        global $instrument;
+        $hash = filter_var($_GET['s'], FILTER_SANITIZE_STRING);
+
+        $q = $this->query('select rs.form_name from redcap_surveys rs
+            join redcap_surveys_participants rsp on rs.survey_id = rsp.survey_id
+            where rsp.hash = ?', $hash);
+
+        $row = $q->fetch_assoc();
+        if (empty($row['form_name'])) return;
+        $instrument = $row['form_name'];
 
         // Only on an actual survey
-        if (empty($instrument)) return;
+        //if (empty($instrument)) return;
 
         $this->loadInstances();
 
@@ -332,7 +340,7 @@ class SurveyUITweaks extends \ExternalModules\AbstractExternalModule
             }
             .draggable li.branch_hidden{
                 display:none;
-                border:1px solid red; 
+                border:1px solid red;
             }
             .show_overide {
                 display:table-row !important;
@@ -714,18 +722,23 @@ class SurveyUITweaks extends \ExternalModules\AbstractExternalModule
 
         $global_setting     = $this->getProjectSetting($globalKey);
 
-        if ($global_setting) {
-            $this->emDebug("enabling global $funcName");
-            call_user_func_array(array($this, $funcName), empty($args) ? array($global_setting) : $args);
-        } elseif (!empty($instrument)) {
+        //check for instrument level override
+        $instrument_override = false;
+        if (!empty($instrument)) {
             foreach ($this->settings as $settings) {
-                if (array_key_exists($keyName, $settings)) $keyFound=true;
+                if (array_key_exists($keyName, $settings)) $keyFound = true;
                 if ($settings['survey_name'] == $instrument && $settings[$keyName]) {
                     $this->emDebug("enabling  $funcName on $instrument");
+                    $instrument_override = true;
                     call_user_func_array(array($this, $funcName), empty($args) ? array($settings[$keyName]) : $args);
                 }
             }
         }
+        if ($global_setting and ! $instrument_override) {
+
+            call_user_func_array(array($this, $funcName), empty($args) ? array($global_setting) : $args);
+        }
+
         if (!$keyFound) $this->emError("Unable to find key $keyName in settings");
     }
 

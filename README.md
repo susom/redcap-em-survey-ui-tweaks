@@ -4,7 +4,7 @@ This module provides end users with the ability to apply certain survey tweaks e
 
 ## Tweaks Included:
 
-1. **Remove Excess TD:** When do don't want to waste the left 1" of the survey, you can turn off 'auto-numbering' of survey questions and enable this tweak.
+1. **Remove Excess TD:** When you don't want to waste the left 1" of the survey, you can turn off 'auto-numbering' of survey questions and enable this tweak.
 
 1. **Hide Submit Button:** In some cases you want a survey to be a 'dead-end'.  Perhaps to display read-only information or to stop an auto-continue chain.  With this tweak you can remove the Submit button from the page.
 
@@ -20,7 +20,7 @@ This module provides end users with the ability to apply certain survey tweaks e
 
 1. **Hide Reset Button:** In some cases you want to hide the 'reset link' for radio questions.
 
-1. **Rename "Next Page >>" and "<< Previous Page" Buttons:** You may want to change the language on these buttons when breaking up a survey by section.
+1. **Rename "Next Page >>" and "<< Previous Page" Buttons":** You may want to change the language on these buttons when breaking up a survey by section.
 
 1. **Hide required field text:** De-clutter your page on surveys with many required fields.
 
@@ -32,4 +32,17 @@ This module provides end users with the ability to apply certain survey tweaks e
 
 1. **Survey Duration Fields:** Designate text fields for capture of the cumulative duration that a survey respondent spends on the survey page where the field is located. Fields can be designated either via the project module configuration dialog or by specifing the action tag @SURVEY-DURATION in Field Annotations.
 
+1. **Change the amount of screen space a survey takes up:** You may want your survey to appear slightly wider
+
 What's next?  Up to you.  Post an issue as a request on the github site or fork and make a pull request on your own.
+
+Versions:
+- 0.1.0: Initial Development Version
+- 0.2.0: Added global function
+- 1.0.0: Initial repo release
+- 1.0.1: Changed class so as not to have array constants
+- 1.1.5: Fixed matrix ranking bug
+- 1.2.0: Fixed renaming of buttons bug (REDCap 12+), form level renaming of buttons now takes priority over global renaming
+
+Notes:
+As of version 1.2.0, instrument level configuration will take priority over global configurations
