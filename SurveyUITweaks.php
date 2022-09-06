@@ -50,6 +50,7 @@ class SurveyUITweaks extends \ExternalModules\AbstractExternalModule
         // Load all project settings
         if (empty($this->settings) && $this->getProjectId()) {
             $this->settings = $this->getProjectSettings();
+            $this->emDebug("Settings are", $this->settings);
             $this->instances = $this->getSubSettings('survey_tweaks');
         }
         // $this->emDebug($this->settings);
