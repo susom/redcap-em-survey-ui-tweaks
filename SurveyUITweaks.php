@@ -42,7 +42,8 @@ class SurveyUITweaks extends \ExternalModules\AbstractExternalModule
             try {
                 $this->settings = $this->getSubSettings('survey_tweaks');
             } catch (\Exception $e) {
-                $this->emDebug("Exception:", $e->getTraceAsString());
+                $this->emError("Exception:", $e->getTraceAsString());
+                $this->settings = [];
             }
         }
         // $this->emDebug($this->settings);
