@@ -740,11 +740,10 @@ class SurveyUITweaks extends \ExternalModules\AbstractExternalModule
             }
         }
         if ($global_setting and ! $instrument_override) {
-
             call_user_func_array(array($this, $funcName), empty($args) ? array($global_setting) : $args);
         }
 
-        if (!$keyFound) $this->emError("Unable to find key $keyName in settings");
+        // if (!$keyFound) $this->emError("Unable to find key $keyName in settings");
     }
 
     // TODO: Build function to determine which are enabled
