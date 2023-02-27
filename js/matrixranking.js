@@ -28,11 +28,11 @@ MatrixRanking = Object.assign( MatrixRanking, {
     init: function () {
         //PARSE the MatrixRank.config to Tweak Matrix UI from radio buttons to Drag n Drop
         var matrix_rank_names = Object.keys(this.config);
-        
+
         this.hideDefault(matrix_rank_names);
 
         this.checkState(matrix_rank_names);
-        
+
         for(var mtx_grp in this.config){
             this.constructNewUI(mtx_grp, this.config[mtx_grp]);
         }
@@ -92,7 +92,7 @@ MatrixRanking = Object.assign( MatrixRanking, {
 
             var input_prefix 	= "#mtxopt-";
             var mtx_pfx 		= input_prefix + mtx_grp_config["names"][i] + "_";
-            var label 			= $("<li>").text(mtx_grp_config["labels"][i]).attr("data-checkgrp",mtx_pfx).addClass("draggable_" + mtx_grp_config["names"][i]);
+            var label 			= $("<li>").text(mtx_grp_config["labels"][i]).attr("data-checkgrp",mtx_pfx).attr("data-fieldname", mtx_grp_config["names"][i]).addClass("draggable_" + mtx_grp_config["names"][i]);
 
             // if branched hidden, then will need to hide in the new UI as well
             if(this.branched_hidden.indexOf(mtx_grp_config["names"][i]) > -1){
@@ -122,7 +122,7 @@ MatrixRanking = Object.assign( MatrixRanking, {
                 var val_idx 		= saved_vals.indexOf(field_name);
                 var rank_order 		= saved_keys[val_idx];
                 var rank_badge 		= $("<span>").addClass("badge").addClass("badge-pill").addClass("badge-info").css("margin-right","5px").text(rank_order);
-                var label 			= $("<li>").text(stored_nam_lab[field_name]).attr("data-checkgrp",mtx_pfx).prepend(rank_badge);
+                var label 			= $("<li>").text(stored_nam_lab[field_name]).attr("data-checkgrp",mtx_pfx).attr("data-fieldname", field_name).prepend(rank_badge);
 
                 sort_rank_list_2.append(label);
             }
@@ -138,6 +138,9 @@ MatrixRanking = Object.assign( MatrixRanking, {
             var mtx_instructions = $("<p>").addClass("alert alert-light").text(show_mtx_instructions).width(draggable_div_2.width()*.9);
             draggable_div_2.prepend(mtx_instructions);
         }
+
+        //Need to unbind inline onclick for hidden input radios cause they do their own checking logic which blocks the reordering below
+        $("tr[mtxgrp='"+mtx_grp+"'] .data.choicematrix input[type='radio']").removeAttr('onclick');
 
         //NOW SET THE UI AS "Sortable"
         $("#"+sort_rank_id+", #"+sort_rank_target_id+"").sortable({
@@ -158,10 +161,7 @@ MatrixRanking = Object.assign( MatrixRanking, {
                 }
 
                 //FIRST UNCHECK ALL THE CURRENT ORDER TO AVOID THAT DOUBLE CHECKED ERROR MESSAGE
-                $("tr[mtxgrp='"+mtx_grp+"'] input[type='radio']:checked").each(function(){
-                    var parent_tr = $(this).closest("tr[mtxgrp='"+mtx_grp+"']");
-                    parent_tr.find(".smalllink").trigger("click");
-                });
+                $("tr[mtxgrp='"+mtx_grp+"'] .resetLinkParent .smalllink").click();
 
                 //NOW ITERATE THROUGH CURRENT ORDER AND UPDATE ALL THE CLICK VALUES IN THE EXISTING MATRIX (that is sitting offscreen)
                 $("#"+sort_rank_target_id+" li").each(function(idx){
