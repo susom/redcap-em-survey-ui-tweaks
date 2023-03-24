@@ -139,8 +139,12 @@ MatrixRanking = Object.assign( MatrixRanking, {
             draggable_div_2.prepend(mtx_instructions);
         }
 
-        //Need to unbind inline onclick for hidden input radios cause they do their own checking logic which blocks the reordering below
-        $("tr[mtxgrp='"+mtx_grp+"'] .data.choicematrix input[type='radio']").removeAttr('onclick');
+        //Need to unbind inline onclick on the hidden input radios cause they do their own checking logic which blocks the reordering below
+        $("tr[mtxgrp='"+mtx_grp+"'] .data.choicematrix input[type='radio']").each(function(){
+            //but keep the portion of the onclick that actually stores the data on the hidden matrix radio
+            var new_onclick = $(this).attr("onclick").split(";")[1];
+            $(this).attr("onclick", new_onclick);
+        });
 
         //NOW SET THE UI AS "Sortable"
         $("#"+sort_rank_id+", #"+sort_rank_target_id+"").sortable({
