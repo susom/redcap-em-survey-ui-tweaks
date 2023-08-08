@@ -55,8 +55,7 @@ class SurveyUITweaks extends \ExternalModules\AbstractExternalModule
         // Only call if on a survey page
         if (PAGE != 'surveys/index.php') return;
 
-        $hash = filter_var($_GET['s'], FILTER_SANITIZE_STRING);
-
+        $hash = preg_replace("/[^a-zA-Z0-9]+/", "", $_GET['s']);
         $q = $this->query('select rs.form_name from redcap_surveys rs
             join redcap_surveys_participants rsp on rs.survey_id = rsp.survey_id
             where rsp.hash = ?', $hash);
