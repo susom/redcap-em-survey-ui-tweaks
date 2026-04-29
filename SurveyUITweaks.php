@@ -69,6 +69,9 @@ class SurveyUITweaks extends \ExternalModules\AbstractExternalModule
 
         $this->loadInstances();
 
+        // Check if survey_login_on_save is enabled - if so, bypass survey login for first submission
+        $this->bypassSurveyLoginForFirstSubmission($instrument, $hash);
+
         $survey_render_tweaks = array(
             'rename_next_button'            => 'renameNextButton2',
             'rename_previous_button'        => 'renamePreviousButton2'
@@ -166,11 +169,92 @@ class SurveyUITweaks extends \ExternalModules\AbstractExternalModule
         if (! Survey::surveyLoginEnabled()) return;
 
         // Add cookie to preserve the respondent's login "session" across multiple surveys in a project
-        setcookie('survey_login_pid'.$project_id, hash($password_algo, "$project_id|$record|$salt"),
+        // Use salt2 from GLOBALS as REDCap does in the survey login code (surveys/index.php line ~1381)
+        $hash_value = hash($password_algo, "$project_id|$record|$salt|{$GLOBALS['salt2']}");
+        setcookie('survey_login_pid'.$project_id, $hash_value,
                   time()+(Survey::getSurveyLoginAutoLogoutTimer()*60), '/', '', false, true);
         // Add second cookie that expires when the browser is closed (BOTH cookies must exist to auto-login respondent)
-        setcookie('survey_login_session_pid'.$project_id, hash($password_algo, "$project_id|$record|$salt"), 0, '/', '', false, true);
+        setcookie('survey_login_session_pid'.$project_id, $hash_value, 0, '/', '', false, true);
 
+    }
+
+    /**
+     * Bypass survey login for first-time submissions when survey_login_on_save is enabled.
+     * This sets the survey login cookies BEFORE the survey is rendered so the login dialog is skipped.
+     * @param string $instrument The form/instrument name
+     * @param string $hash The survey hash
+     */
+    function bypassSurveyLoginForFirstSubmission($instrument, $hash) {
+        $project_id = $this->getProjectId();
+
+        // Skip if survey login is not enabled at project level
+        if (! Survey::surveyLoginEnabled()) return;
+
+        // Check if survey_login_on_save is enabled for this instrument
+        $surveyLoginOnSaveEnabled = false;
+        foreach ($this->settings as $settings) {
+            if ($settings['survey_name'] == $instrument && !empty($settings['survey_login_on_save'])) {
+                $surveyLoginOnSaveEnabled = true;
+                break;
+            }
+        }
+
+        if (!$surveyLoginOnSaveEnabled) return;
+
+        // Get participant_id from hash
+        $q = $this->query('select rsp.participant_id, rsp.participant_email
+            from redcap_surveys_participants rsp
+            where rsp.hash = ?', $hash);
+        $row = $q->fetch_assoc();
+
+        if (empty($row['participant_id'])) return;
+        $participant_id = $row['participant_id'];
+
+        // Skip for public surveys (participant_email is null for public survey links)
+        if (empty($row['participant_email'])) return;
+
+        // Check if a response already exists and has been submitted (first_submit_time is not null)
+        $q2 = $this->query('select rsr.response_id, rsr.first_submit_time, rsr.record
+            from redcap_surveys_response rsr
+            where rsr.participant_id = ?
+            limit 1', $participant_id);
+        $response = $q2->fetch_assoc();
+
+        // If there's no response yet OR if first_submit_time is null (never submitted),
+        // this is a first-time submission - set cookies to bypass login
+        if (empty($response) || empty($response['first_submit_time'])) {
+            // We need to get the record name to set the cookies properly
+            // If no response exists, we won't have a record yet, but that's OK -
+            // in that case the survey login check won't trigger anyway (no record in participant table)
+
+            // Get record from participant table if response exists
+            if (!empty($response['record'])) {
+                $record = $response['record'];
+
+                global $password_algo, $salt;
+
+                // Check if cookies already exist (user might be refreshing page)
+                $cookie_name = 'survey_login_pid' . $project_id;
+                $session_cookie_name = 'survey_login_session_pid' . $project_id;
+
+                // Only set cookies if they don't already exist
+                if (!isset($_COOKIE[$cookie_name]) || !isset($_COOKIE[$session_cookie_name])) {
+                    $this->emDebug("Bypassing survey login for first submission on instrument: $instrument, record: $record");
+
+                    // Set cookies to bypass survey login
+                    // Use salt2 from GLOBALS as REDCap does in the survey login code
+                    $hash_value = hash($password_algo, "$project_id|$record|$salt|{$GLOBALS['salt2']}");
+
+                    setcookie($cookie_name, $hash_value,
+                              time()+(Survey::getSurveyLoginAutoLogoutTimer()*60), '/', '', false, true);
+                    setcookie($session_cookie_name, $hash_value, 0, '/', '', false, true);
+
+                    // Also set in $_COOKIE so it's available immediately without page refresh
+                    $_COOKIE[$cookie_name] = $hash_value;
+                    $_COOKIE[$session_cookie_name] = $hash_value;
+                }
+            }
+        }
     }
 
     function checkSurveyDuration($instrument) {

@@ -221,7 +221,7 @@
                 },
                 {
                     "key": "survey_login_on_save",
-                    "name": "Select a survey below if you want auto-survey-login to occur when this is saved.  This is useful for cases where you do not want to enforce survey login on the initial submission of data.",
+                    "name": "Bypass survey login for initial submission<br><i>When enabled, participants will NOT be asked to log in for their first (initial) survey submission. The survey login will be set automatically after they complete this survey, so subsequent surveys will use auto-login.</i>",
                     "required": false,
                     "type": "checkbox"
                 },
