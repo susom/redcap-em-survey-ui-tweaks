@@ -44,7 +44,12 @@ MatrixRanking = Object.assign( MatrixRanking, {
         for(var i in og_mtx_grp){
             var og_mtx_name 	= og_mtx_grp[i];
             var sortrank_mtx_tr = $("tr[mtxgrp='"+og_mtx_name+"']");
-            sortrank_mtx_tr.css("opacity",0).css("position","absolute").css("left","-5000px");
+            //pointer-events:none is REQUIRED: opacity:0 hides these rows visually but they still
+            //capture clicks, and making the header row position:absolute lets its inner table balloon
+            //so its (invisible) box overlaps fields rendered below the matrix - e.g. a branched
+            //"other, specify" text box became un-clickable. Disabling pointer events lets clicks fall
+            //through to the real field. Programmatic .click() on the hidden radios is unaffected.
+            sortrank_mtx_tr.css("opacity",0).css("position","absolute").css("left","-5000px").css("pointer-events","none");
         }
         return;
     },
