@@ -25,17 +25,15 @@ class SurveyUITweaks extends \ExternalModules\AbstractExternalModule
 
     public $context;    // Args from calling hook function
 
-    function __construct()
-    {
-        parent::__construct();
-        if ($this->getProjectId()) {
-            // Load the project settings
-            // $this->emDebug("In Project Context!");
-            // https://github.com/vanderbilt/redcap-external-modules/issues/329
-            // $this->settings = $this->framework->getSubSettings('survey_tweaks');
-        }
-    }
-
+    /**
+     * Lazy-load the per-survey sub_settings.  Every hook calls this first.
+     *
+     * Deliberately NOT done in a constructor: the framework instantiates the module class
+     * whenever module links are rendered, so constructor work runs on pages that never need
+     * it, and getProjectId()/getSubSettings() are unreliable outside project context (crons,
+     * non-project pages).  See https://github.com/vanderbilt/redcap-external-modules/issues/329
+     * for why getSubSettings() in particular cannot be called that early.
+     */
     function loadInstances() {
         if ($this->getProjectId() && empty($this->settings)) {
             // Load the project settings
