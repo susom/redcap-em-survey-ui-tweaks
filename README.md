@@ -26,6 +26,8 @@ This module provides end users with the ability to apply certain survey tweaks e
 
 1. **Save and Return without email:** Remove the option to send a return link to the user's email. Users must save the url themselves.
 
+1. **Save and Return Later button:** Remove the 'Save and Return Later' button. Users must save the url themselves.
+
 1. **Survey Login on Save** You can use this feature to prevent users from having to perform a survey-login during
  the initial data entry.  To use, have a non-login survey where they enter their 'code'.  Set this survey as the
   EM option.  Then, when it is saved, it will automatically make the cookies as though the user just logged in.

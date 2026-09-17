@@ -99,7 +99,8 @@ class SurveyUITweaks extends \ExternalModules\AbstractExternalModule
             'hide_required_text'            => 'hideRequiredText',
             'resize_survey'                 => 'resizeSurvey',
             'social_share'                  => 'socialShare',
-            'responsive_td_fix'             => 'customTDFix'
+            'responsive_td_fix'             => 'customTDFix',
+            'save_and_return_later_button'  => 'saveAndReturnLaterButton'
         );
 
         foreach($survey_page_top_tweaks as $key=>$func) {
@@ -767,6 +768,17 @@ class SurveyUITweaks extends \ExternalModules\AbstractExternalModule
         <?php
     }
 
+    function saveAndReturnLaterButton()
+    {
+        ?>
+        <script type = "text/javascript">
+            $(document).ready(function(){
+                $("button[name='submit-btn-savereturnlater']").closest('tr').hide();
+            });
+        </script>
+        <?php
+    }
+
     function saveAndReturnWithoutEmail()
     {
         ?>
@@ -774,6 +786,10 @@ class SurveyUITweaks extends \ExternalModules\AbstractExternalModule
             #return_instructions {display:none;}
         </style>
         <script type = "text/javascript">
+            function emailReturning() {
+                $("span[data-rc-lang='survey_582']").closest('div').remove();
+            }
+
             $(document).ready(function(){
                 $(document.querySelector("#return_instructions > div > div:nth-child(5)")).remove();
                 $(document.querySelector("#return_instructions > div > div:nth-child(4) > span:nth-child(8)")).remove();

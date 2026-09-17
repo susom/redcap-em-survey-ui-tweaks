@@ -128,6 +128,12 @@
             "type": "checkbox"
         },
         {
+            "key": "global_save_and_return_later_button",
+            "name": "Remove the \"Save and Return Later\" button, users must have return link and code",
+            "required": false,
+            "type": "checkbox"
+        },
+        {
             "key": "global_social_share",
             "name": "Add Share (survey link) on Social Media Icons",
             "required": false,
