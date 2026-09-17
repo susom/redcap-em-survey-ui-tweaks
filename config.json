@@ -9,13 +9,8 @@
     },
     "authors": [
         {
-            "name": "Andy Martin",
-            "email": "andy123@stanford.edu",
-            "institution": "Stanford University"
-        },
-        {
-            "name": "YongJae Lee",
-            "email": "jael@stanford.edu",
+            "name": "Ihab Zeedia",
+            "email": "ihabz@stanford.edu",
             "institution": "Stanford University"
         },
         {
@@ -26,11 +21,6 @@
         {
             "name": "Irvin Szeto",
             "email": "irvins@stanford.edu",
-            "institution": "Stanford University"
-        },
-        {
-            "name": "Ihab Zeedia",
-            "email": "ihabz@stanford.edu",
             "institution": "Stanford University"
         }
     ],
