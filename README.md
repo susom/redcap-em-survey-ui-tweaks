@@ -34,6 +34,8 @@ This module provides end users with the ability to apply certain survey tweaks e
 
 1. **Change the amount of screen space a survey takes up:** You may want your survey to appear slightly wider
 
+1. **Enhanced Drag and Drop Matrix Ranking:** Replace the radio-button grid of a matrix with `Matrix Ranking?` enabled with a two-column drag-and-drop interface — respondents drag the choices into the order they want instead of hunting for the right cell. Options include showing the rank number on each item, randomizing the initial order of the choices, and adding instruction text to the drop area. The original matrix is kept on the page (off-screen) so REDCap's own saving, branching logic and required-field checks continue to work.
+
 What's next?  Up to you.  Post an issue as a request on the github site or fork and make a pull request on your own.
 
 Versions:
@@ -43,6 +45,10 @@ Versions:
 - 1.0.1: Changed class so as not to have array constants
 - 1.1.5: Fixed matrix ranking bug
 - 1.2.0: Fixed renaming of buttons bug (REDCap 12+), form level renaming of buttons now takes priority over global renaming
+- 1.2.1: Drag and drop matrix ranking: removed conflicting inline onclick handlers on the hidden radio buttons
+- 1.2.2: Drag and drop matrix ranking: fixed rank values not saving
+- 1.2.3: Drag and drop matrix ranking: fields rendered below the matrix are clickable again (the hidden matrix rows were intercepting clicks), branching logic driven by a ranked choice now fires on the first drag, and dragging a choice back out clears its rank
+- 1.2.4: Internal only: removed the module class constructor so the REDCap external module security scan passes (it contained no live code; per-survey settings are lazy-loaded by `loadInstances()` as before). No functional change.
 
 Notes:
 As of version 1.2.0, instrument level configuration will take priority over global configurations
