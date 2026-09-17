@@ -44,7 +44,12 @@ MatrixRanking = Object.assign( MatrixRanking, {
         for(var i in og_mtx_grp){
             var og_mtx_name 	= og_mtx_grp[i];
             var sortrank_mtx_tr = $("tr[mtxgrp='"+og_mtx_name+"']");
-            sortrank_mtx_tr.css("opacity",0).css("position","absolute").css("left","-5000px");
+            //pointer-events:none is REQUIRED: opacity:0 hides these rows visually but they still
+            //capture clicks, and making the header row position:absolute lets its inner table balloon
+            //so its (invisible) box overlaps fields rendered below the matrix - e.g. a branched
+            //"other, specify" text box became un-clickable. Disabling pointer events lets clicks fall
+            //through to the real field. Programmatic .click() on the hidden radios is unaffected.
+            sortrank_mtx_tr.css("opacity",0).css("position","absolute").css("left","-5000px").css("pointer-events","none");
         }
         return;
     },
@@ -139,10 +144,16 @@ MatrixRanking = Object.assign( MatrixRanking, {
             draggable_div_2.prepend(mtx_instructions);
         }
 
-        //Need to unbind inline onclick on the hidden input radios cause they do their own checking logic which blocks the reordering below
+        //Need to strip the matrix_rank() de-dup call from the hidden radios' inline onclick because
+        //its own ranking/checking logic blocks the reordering we drive below. But we must KEEP the
+        //rest of REDCap's onclick (value store + calculate()/doBranching()) so branching still fires
+        //e.g. a field/section below the matrix that branches off a ranked option.
         $("tr[mtxgrp='"+mtx_grp+"'] .data.choicematrix input[type='radio']").each(function(){
-            //but keep the portion of the onclick that actually stores the data on the hidden matrix radio
-            var new_onclick = $(this).attr("onclick").split(";")[1];
+            var onclick = $(this).attr("onclick");
+            if(!onclick) return;
+            //REDCap builds this as: matrix_rank(...);document.forms['form'].X.value=this.value;[calculate();]doBranching('X');
+            //Remove ONLY the matrix_rank(...) call (its args never contain ')') and leave everything else intact.
+            var new_onclick = onclick.replace(/matrix_rank\([^)]*\);?/, "");
             $(this).attr("onclick", new_onclick);
         });
 
@@ -164,8 +175,19 @@ MatrixRanking = Object.assign( MatrixRanking, {
                     }
                 }
 
-                //FIRST UNCHECK ALL THE CURRENT ORDER TO AVOID THAT DOUBLE CHECKED ERROR MESSAGE
-                $("tr[mtxgrp='"+mtx_grp+"'] .resetLinkParent .smalllink").click();
+                //If an option was dragged OUT of the ranking (back to the left list), clear that one
+                //field so it no longer holds a stale rank value. radioResetVal() blanks the value AND
+                //fires doBranching(), so any field/section that branches off this option updates too
+                //(e.g. hides an "other, specify" box). We reset only the single removed field because
+                //radioResetVal() self-guards against rapid successive calls (justClickedEnhancedChoice),
+                //so resetting the whole group in a loop would silently skip all but the first field.
+                //Items still in the target keep correct ranks via the re-click loop below.
+                if(($(evt.to).attr("id") || "").indexOf("target") === -1){
+                    var removed_field = $(evt.item).data("fieldname");
+                    if(removed_field){
+                        radioResetVal(removed_field, 'form');
+                    }
+                }
 
                 //NOW ITERATE THROUGH CURRENT ORDER AND UPDATE ALL THE CLICK VALUES IN THE EXISTING MATRIX (that is sitting offscreen)
                 $("#"+sort_rank_target_id+" li").each(function(idx){
