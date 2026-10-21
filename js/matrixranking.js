@@ -36,6 +36,50 @@ MatrixRanking = Object.assign( MatrixRanking, {
         for(var mtx_grp in this.config){
             this.constructNewUI(mtx_grp, this.config[mtx_grp]);
         }
+
+        this.watchLanguage();
+        return;
+    },
+
+    //MULTI-LANGUAGE MANAGEMENT (MLM) SUPPORT
+    //The drag/drop items are built from the data dictionary labels (always the reference language).
+    //MLM translates the page client side, but only REDCap's own elements, which for these matrices
+    //are the rows parked off screen by hideDefault(). So copy each row's (translated) label text into
+    //its drag/drop item, now and whenever the participant switches language.
+    watchLanguage: function(){
+        var ML = (window.REDCap && window.REDCap.MultiLanguage) ? window.REDCap.MultiLanguage : null;
+        //No MLM on this page (or REDCap too old to have the JS API): keep the data dictionary labels
+        if(!ML || typeof ML.onLangChanged !== "function") return;
+
+        var _this = this;
+        ML.onLangChanged(function(){
+            _this.refreshLabels();
+        });
+        //If MLM finished initializing before we subscribed, we missed its first notification
+        if(typeof ML.isInitialized === "function" && ML.isInitialized()){
+            this.refreshLabels();
+        }
+        return;
+    },
+
+    getRowLabel: function(field_name, fallback){
+        //REDCap renders each matrix row label as <div data-mlm-field="X" data-mlm-type="label"> inside tr[sq_id="X"];
+        //MLM swaps the contents of that div when translating
+        var row_label = $("tr[sq_id='" + field_name + "'] [data-mlm-field='" + field_name + "'][data-mlm-type='label']").first();
+        var text = row_label.length ? $.trim(row_label.text()) : "";
+        return text !== "" ? text : fallback;
+    },
+
+    refreshLabels: function(){
+        for(var mtx_grp in this.config){
+            var grp = this.config[mtx_grp];
+            var lists = $("#sort_rank_" + mtx_grp + ", #sort_rank_target_" + mtx_grp);
+            for(var i in grp["names"]){
+                var field_name = grp["names"][i];
+                var label_text = this.getRowLabel(field_name, grp["labels"][i]);
+                lists.find("li[data-fieldname='" + field_name + "'] .mtx_rank_text").text(label_text);
+            }
+        }
         return;
     },
 
@@ -97,7 +141,7 @@ MatrixRanking = Object.assign( MatrixRanking, {
 
             var input_prefix 	= "#mtxopt-";
             var mtx_pfx 		= input_prefix + mtx_grp_config["names"][i] + "_";
-            var label 			= $("<li>").text(mtx_grp_config["labels"][i]).attr("data-checkgrp",mtx_pfx).attr("data-fieldname", mtx_grp_config["names"][i]).addClass("draggable_" + mtx_grp_config["names"][i]);
+            var label 			= $("<li>").append($("<span>").addClass("mtx_rank_text").text(mtx_grp_config["labels"][i])).attr("data-checkgrp",mtx_pfx).attr("data-fieldname", mtx_grp_config["names"][i]).addClass("draggable_" + mtx_grp_config["names"][i]);
 
             // if branched hidden, then will need to hide in the new UI as well
             if(this.branched_hidden.indexOf(mtx_grp_config["names"][i]) > -1){
@@ -127,7 +171,7 @@ MatrixRanking = Object.assign( MatrixRanking, {
                 var val_idx 		= saved_vals.indexOf(field_name);
                 var rank_order 		= saved_keys[val_idx];
                 var rank_badge 		= $("<span>").addClass("badge").addClass("badge-pill").addClass("badge-info").css("margin-right","5px").text(rank_order);
-                var label 			= $("<li>").text(stored_nam_lab[field_name]).attr("data-checkgrp",mtx_pfx).attr("data-fieldname", field_name).prepend(rank_badge);
+                var label 			= $("<li>").append($("<span>").addClass("mtx_rank_text").text(stored_nam_lab[field_name])).attr("data-checkgrp",mtx_pfx).attr("data-fieldname", field_name).prepend(rank_badge);
 
                 sort_rank_list_2.append(label);
             }
