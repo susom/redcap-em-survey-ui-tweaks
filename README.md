@@ -49,6 +49,7 @@ Versions:
 - 1.2.2: Drag and drop matrix ranking: fixed rank values not saving
 - 1.2.3: Drag and drop matrix ranking: fields rendered below the matrix are clickable again (the hidden matrix rows were intercepting clicks), branching logic driven by a ranked choice now fires on the first drag, and dragging a choice back out clears its rank
 - 1.2.4: Internal only: removed the module class constructor so the REDCap external module security scan passes (it contained no live code; per-survey settings are lazy-loaded by `loadInstances()` as before). No functional change.
+- 1.2.5: Drag and drop matrix ranking: the drag/drop items now show Multi-Language Management translations of the row labels and follow the participant's language switches (previously they always showed the reference language)
 
 Notes:
 As of version 1.2.0, instrument level configuration will take priority over global configurations
